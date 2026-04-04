@@ -1,7 +1,7 @@
 // Streakly - app.js
 // Configuracion Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyA0D69-UeOtJD2+ML1bxzWsOQPJbB_2m3g",
+  apiKey: "AIzaSyA0D69-UeOtJD2rML1bxzWsOQPJbB_2m3g",
   authDomain: "streakly-c1324.firebaseapp.com",
   projectId: "streakly-c1324",
   storageBucket: "streakly-c1324.firebasestorage.app",
