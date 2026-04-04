@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Streakly - Construye hábitos. Mantén tu racha.</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #fff; }
+    .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; background: linear-gradient(135deg, #0f0f1a 0%, #1a1a3e 50%, #0f0f1a 100%); }
+    .logo { font-size: 4rem; margin-bottom: 1rem; }
+    h1 { font-size: 3.5rem; font-weight: 800; background: linear-gradient(90deg, #FF6B35, #FF8C42, #FFA500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+    .tagline { font-size: 1.4rem; color: #a0a0c0; margin-bottom: 2.5rem; max-width: 600px; }
+    .badge { display: inline-block; background: rgba(255,107,53,0.15); border: 1px solid rgba(255,107,53,0.4); color: #FF6B35; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.9rem; margin-bottom: 2rem; }
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; max-width: 900px; margin: 3rem auto; padding: 0 1rem; }
+    .feature-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,107,53,0.2); border-radius: 16px; padding: 2rem; text-align: center; transition: transform 0.3s; }
+    .feature-card:hover { transform: translateY(-5px); border-color: #FF6B35; }
+    .feature-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .feature-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; color: #FF8C42; }
+    .feature-card p { color: #a0a0c0; font-size: 0.9rem; line-height: 1.5; }
+    .tech-section { text-align: center; padding: 3rem 1rem; }
+    .tech-section h2 { font-size: 1.8rem; margin-bottom: 2rem; color: #FF8C42; }
+    .tech-tags { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; max-width: 700px; margin: 0 auto; }
+    .tech-tag { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); padding: 0.5rem 1.2rem; border-radius: 20px; font-size: 0.9rem; color: #c0c0e0; }
+    .cta { text-align: center; padding: 3rem 1rem 4rem; }
+    .btn { display: inline-block; background: linear-gradient(90deg, #FF6B35, #FF8C42); color: #fff; padding: 1rem 2.5rem; border-radius: 30px; text-decoration: none; font-size: 1.1rem; font-weight: 700; margin: 0.5rem; transition: transform 0.3s, box-shadow 0.3s; }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255,107,53,0.4); }
+    .btn-outline { background: transparent; border: 2px solid #FF6B35; color: #FF6B35; }
+    .btn-outline:hover { background: rgba(255,107,53,0.1); }
+    .streak-bar { display: flex; gap: 6px; justify-content: center; margin: 2rem 0; }
+    .streak-day { width: 36px; height: 36px; border-radius: 8px; background: #FF6B35; opacity: 0; animation: fadeIn 0.3s ease forwards; }
+    .streak-day:nth-child(1) { animation-delay: 0.1s; }
+    .streak-day:nth-child(2) { animation-delay: 0.2s; }
+    .streak-day:nth-child(3) { animation-delay: 0.3s; }
+    .streak-day:nth-child(4) { animation-delay: 0.4s; }
+    .streak-day:nth-child(5) { animation-delay: 0.5s; }
+    .streak-day:nth-child(6) { animation-delay: 0.6s; }
+    .streak-day:nth-child(7) { animation-delay: 0.7s; background: rgba(255,107,53,0.3); border: 2px dashed #FF6B35; }
+    @keyframes fadeIn { to { opacity: 1; } }
+    footer { text-align: center; padding: 2rem; color: #606080; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.05); }
+    footer a { color: #FF6B35; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="logo">🔥</div>
+    <div class="badge">✨ Proyecto Final DAM · Universae 2026</div>
+    <h1>Streakly</h1>
+    <p class="tagline">Construye hábitos poderosos. Mantén tu racha. Transforma tu rutina diaria en resultados reales.</p>
+    <div class="streak-bar">
+      <div class="streak-day"></div>
+      <div class="streak-day"></div>
+      <div class="streak-day"></div>
+      <div class="streak-day"></div>
+      <div class="streak-day"></div>
+      <div class="streak-day"></div>
+      <div class="streak-day"></div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h3>Seguimiento de Hábitos</h3>
+      <p>Crea y gestiona tus hábitos diarios con un sistema visual e intuitivo.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔥</div>
+      <h3>Rachas Consecutivas</h3>
+      <p>Visualiza tus rachas y mantén la motivación para no romper la cadena.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📈</div>
+      <h3>Estadísticas</h3>
+      <p>Analiza tu progreso con gráficas y reportes de tus logros acumulados.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔔</div>
+      <h3>Recordatorios</h3>
+      <p>Notificaciones inteligentes para que nunca olvides completar tu rutina.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💾</div>
+      <h3>Sincronización</h3>
+      <p>Tus datos siempre seguros y sincronizados con Firebase en la nube.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <h3>Autenticación Segura</h3>
+      <p>Accede con tu cuenta de Google o crea una cuenta con email y contraseña.</p>
+    </div>
+  </section>
+
+  <section class="tech-section">
+    <h2>🛠️ Tecnologías</h2>
+    <div class="tech-tags">
+      <span class="tech-tag">Kotlin</span>
+      <span class="tech-tag">Android Studio</span>
+      <span class="tech-tag">Firebase Firestore</span>
+      <span class="tech-tag">Firebase Auth</span>
+      <span class="tech-tag">XML Layouts</span>
+      <span class="tech-tag">Material Design</span>
+      <span class="tech-tag">MVVM</span>
+      <span class="tech-tag">SQLite</span>
+      <span class="tech-tag">API REST</span>
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2 style="font-size:2rem; margin-bottom:1.5rem;">Desarrollado por</h2>
+    <p style="color:#a0a0c0; font-size:1.1rem; margin-bottom:2rem;">Aníbal José Guerrero González<br>Técnico Superior en Desarrollo de Aplicaciones Multiplataforma</p>
+    <a href="https://github.com/Anibaljgg/streakly" class="btn">🐝 Ver en GitHub</a>
+    <a href="https://console.firebase.google.com" class="btn btn-outline">🔥 Firebase Project</a>
+  </section>
+
+  <footer>
+    <p>Streakly &copy; 2026 · Proyecto Final DAM · <a href="https://github.com/Anibaljgg">Anibaljgg</a> · Hecho con ❤️ en Zürich, Suiza</p>
+  </footer>
+</body>
+</html>
