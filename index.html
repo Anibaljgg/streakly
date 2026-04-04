@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" id="html-root">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Streakly - Seguimiento de Hábitos</title>
+<title>Streakly</title>
 <link rel="manifest" href="/streakly/manifest.json">
 <meta name="theme-color" content="#6c63ff">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #fff; min-height: 100vh; }
-.auth-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+
+/* ── AUTH ── */
+.auth-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: relative; }
 .auth-card { background: rgba(255,255,255,0.1); padding: 2.5rem; border-radius: 20px; backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); max-width: 400px; width: 100%; }
 .auth-card h1 { text-align: center; margin-bottom: 0.5rem; font-size: 2.5rem; }
 .auth-card p { text-align: center; opacity: 0.9; margin-bottom: 2rem; }
@@ -21,27 +23,42 @@ body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #fff; mi
 .btn-primary:hover { background: #5a52d5; transform: translateY(-2px); }
 .btn-secondary { background: rgba(255,255,255,0.2); color: #fff; margin-bottom: 0.8rem; }
 .btn-secondary:hover { background: rgba(255,255,255,0.3); }
+
+/* ── LANGUAGE ── */
+.lang-selector { position: absolute; top: 1.2rem; right: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.lang-btn { padding: 0.4rem 0.8rem; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; }
+.lang-btn.active, .lang-btn-app.active { background: rgba(255,255,255,0.35); border-color: #fff; }
+.lang-btn:hover, .lang-btn-app:hover { background: rgba(255,255,255,0.25); }
+.lang-btn-app { padding: 0.35rem 0.7rem; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.2s; }
+
+/* ── APP ── */
 .app-section { display: none; min-height: 100vh; background: #0f0f1e; }
-.header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); flex-wrap: wrap; gap: 0.5rem; }
 .header h1 { font-size: 1.8rem; }
-.user-info { display: flex; align-items: center; gap: 1rem; }
+.header-right { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
 .btn-logout { padding: 0.6rem 1.2rem; background: rgba(255,255,255,0.2); border: none; border-radius: 8px; color: #fff; cursor: pointer; font-weight: 600; }
+
+/* ── STATS ── */
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; padding: 2rem; }
 .stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.5rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 .stat-card h3 { font-size: 2.5rem; margin-bottom: 0.5rem; }
 .stat-card p { opacity: 0.9; font-size: 0.9rem; }
+
+/* ── CONTROLS ── */
 .controls { padding: 0 2rem 1rem; display: flex; gap: 1rem; flex-wrap: wrap; }
 .btn-add { flex: 1; min-width: 200px; padding: 1rem; background: #6c63ff; border: none; border-radius: 10px; color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; }
 .btn-add:hover { background: #5a52d5; }
 select { flex: 1; min-width: 200px; padding: 1rem; background: #2d2d44; border: none; border-radius: 10px; color: #fff; font-size: 1rem; cursor: pointer; }
-.habits-container { padding: 2rem; }
+
+/* ── HABITS ── */
+.habits-container { padding: 0 2rem 2rem; }
 #habits-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
 .habit-card { background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%); border: 2px solid rgba(108,99,255,0.3); border-radius: 15px; padding: 1.5rem; display: flex; gap: 1rem; align-items: center; transition: all 0.3s; }
-.habit-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(108,99,255,0.4); }
+.habit-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(108,99,255,0.4); }
 .habit-card.completed { border-color: #4caf50; background: linear-gradient(135deg, rgba(76,175,80,0.1) 0%, rgba(56,142,60,0.1) 100%); }
 .habit-emoji { font-size: 3rem; }
 .habit-info { flex: 1; }
-.habit-info h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+.habit-info h3 { font-size: 1.2rem; margin-bottom: 0.4rem; }
 .category-badge { background: rgba(108,99,255,0.3); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; display: inline-block; margin-bottom: 0.5rem; }
 .habit-stats { display: flex; gap: 1rem; font-size: 0.9rem; opacity: 0.8; }
 .habit-actions { display: flex; flex-direction: column; gap: 0.5rem; }
@@ -49,109 +66,165 @@ select { flex: 1; min-width: 200px; padding: 1rem; background: #2d2d44; border: 
 .btn-complete:hover { transform: scale(1.1); }
 .btn-complete.done { background: #4caf50; }
 .btn-delete { padding: 0.5rem; background: rgba(244,67,54,0.2); border: none; border-radius: 8px; cursor: pointer; font-size: 1.2rem; }
-.empty-state { text-align: center; padding: 3rem; opacity: 0.6; }
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
-.modal-content { background: #2d2d44; padding: 2rem; border-radius: 20px; max-width: 500px; width: 90%; }
-.modal-content h2 { margin-bottom: 1.5rem; }
+.empty-state { text-align: center; padding: 3rem; opacity: 0.6; grid-column: 1/-1; }
+
+/* ── HEATMAP ── */
+.heatmap-section { padding: 0 2rem 2rem; }
+.heatmap-section h2 { margin-bottom: 1rem; font-size: 1.2rem; opacity: 0.9; }
+.heatmap-wrap { background: rgba(255,255,255,0.04); border-radius: 15px; padding: 1.5rem; overflow-x: auto; }
+.heatmap-grid { display: flex; gap: 3px; align-items: flex-start; }
+.heatmap-col { display: flex; flex-direction: column; gap: 3px; }
+.heatmap-cell { width: 13px; height: 13px; border-radius: 2px; background: #1e1e3a; transition: background 0.2s; position: relative; cursor: default; }
+.heatmap-cell:hover::after { content: attr(data-tip); position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; white-space: nowrap; z-index: 10; pointer-events: none; }
+.heatmap-cell.l1 { background: #1e3a2a; }
+.heatmap-cell.l2 { background: #2d6a3f; }
+.heatmap-cell.l3 { background: #3d9e57; }
+.heatmap-cell.l4 { background: #4caf50; }
+.heatmap-months { display: flex; gap: 3px; margin-bottom: 4px; font-size: 0.7rem; opacity: 0.6; }
+
+/* ── CALENDAR ── */
+.calendar-wrap { padding: 1rem 0; }
+.calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.cal-nav { background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 1.3rem; cursor: pointer; padding: 0.3rem 0.8rem; border-radius: 8px; }
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-day-name { text-align: center; font-size: 0.75rem; opacity: 0.6; padding: 4px 0; }
+.cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 0.85rem; }
+.cal-day.empty { background: transparent; }
+.cal-day.normal { background: rgba(255,255,255,0.05); }
+.cal-day.today { background: rgba(108,99,255,0.4); font-weight: 700; }
+.cal-day.completed { background: #4caf50; font-weight: 600; }
+
+/* ── MODAL ── */
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; overflow-y: auto; padding: 1rem; }
+.modal-content { background: #2d2d44; padding: 2rem; border-radius: 20px; max-width: 540px; width: 100%; }
+.modal-content h2 { margin-bottom: 1.2rem; }
 .modal-content .input-group { margin-bottom: 1rem; }
 .modal-content input, .modal-content select { width: 100%; padding: 0.9rem; background: #1a1a2e; border: 1px solid rgba(108,99,255,0.3); border-radius: 8px; color: #fff; font-size: 1rem; }
-.modal-buttons { display: flex; gap: 1rem; margin-top: 1.5rem; }
+.modal-buttons { display: flex; gap: 1rem; margin-top: 1.2rem; }
 .btn-cancel { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* ── TOAST ── */
 #toast { position: fixed; bottom: 2rem; right: 2rem; background: #6c63ff; color: #fff; padding: 1rem 2rem; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); opacity: 0; transform: translateY(100px); transition: all 0.3s; z-index: 2000; }
 #toast.show { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
 
-<!-- Seccion Autenticacion -->
+<!-- SELECTOR IDIOMA (auth) -->
+<div class="lang-selector" id="lang-selector-auth">
+  <button class="lang-btn active" onclick="setLang('es')">ES</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" onclick="setLang('de')">DE</button>
+  <button class="lang-btn" onclick="setLang('fr')">FR</button>
+  <button class="lang-btn" onclick="setLang('pt')">PT</button>
+</div>
+
+<!-- AUTH -->
 <div id="auth-section" class="auth-section">
   <div class="auth-card">
     <h1>🔥 Streakly</h1>
-    <p>Construye hábitos. Mantén tu racha.</p>
-    <div class="input-group">
-      <input type="email" id="email" placeholder="Email">
-    </div>
-    <div class="input-group">
-      <input type="password" id="password" placeholder="Contraseña">
-    </div>
-    <button class="btn btn-primary" onclick="loginWithEmail()">Iniciar sesión</button>
-    <button class="btn btn-secondary" onclick="registerWithEmail()">Crear cuenta</button>
-    <button class="btn btn-secondary" onclick="loginWithGoogle()">🔑 Entrar con Google</button>
+    <p id="auth-subtitle">Construye hábitos. Mantén tu racha.</p>
+    <div class="input-group"><input type="email" id="email" placeholder="Email"></div>
+    <div class="input-group"><input type="password" id="password" placeholder="Password"></div>
+    <button class="btn btn-primary" onclick="loginWithEmail()" id="btn-login-lbl">Iniciar sesión</button>
+    <button class="btn btn-secondary" onclick="registerWithEmail()" id="btn-register-lbl">Crear cuenta</button>
+    <button class="btn btn-secondary" onclick="loginWithGoogle()">🔑 <span id="btn-google-lbl">Entrar con Google</span></button>
   </div>
 </div>
 
-<!-- Seccion App -->
+<!-- APP -->
 <div id="app-section" class="app-section">
   <header class="header">
     <h1>🔥 Streakly</h1>
-    <div class="user-info">
-      <span id="user-name">Usuario</span>
-      <button class="btn-logout" onclick="logout()">Salir</button>
+    <div class="header-right">
+      <button class="lang-btn-app active" onclick="setLang('es')">ES</button>
+      <button class="lang-btn-app" onclick="setLang('en')">EN</button>
+      <button class="lang-btn-app" onclick="setLang('de')">DE</button>
+      <button class="lang-btn-app" onclick="setLang('fr')">FR</button>
+      <button class="lang-btn-app" onclick="setLang('pt')">PT</button>
+      <span id="user-name" style="opacity:0.8;font-size:0.9rem;"></span>
+      <button class="btn-logout" onclick="logout()" id="btn-logout-lbl">Salir</button>
     </div>
   </header>
 
   <div class="stats">
-    <div class="stat-card">
-      <h3 id="stat-total">0</h3>
-      <p>Hábitos totales</p>
-    </div>
-    <div class="stat-card">
-      <h3 id="stat-today">0</h3>
-      <p>Completados hoy</p>
-    </div>
-    <div class="stat-card">
-      <h3 id="stat-streak">0</h3>
-      <p>Mejor racha</p>
-    </div>
+    <div class="stat-card"><h3 id="stat-total">0</h3><p id="lbl-total-habits">Hábitos totales</p></div>
+    <div class="stat-card"><h3 id="stat-today">0</h3><p id="lbl-completed-today">Completados hoy</p></div>
+    <div class="stat-card"><h3 id="stat-streak">0</h3><p id="lbl-best-streak">Mejor racha</p></div>
   </div>
 
   <div class="controls">
-    <button class="btn-add" onclick="openModal('add-modal')">➕ Agregar hábito</button>
+    <button class="btn-add" onclick="openModal('add-modal')" id="btn-add-lbl">➕ Agregar hábito</button>
     <select id="filter-category" onchange="renderHabits()">
-      <option value="all">Todas las categorías</option>
-      <option value="salud">Salud</option>
-      <option value="fitness">Fitness</option>
-      <option value="aprendizaje">Aprendizaje</option>
-      <option value="trabajo">Trabajo</option>
-      <option value="otro">Otro</option>
+      <option value="all" data-i18n="filter-all">Todas las categorías</option>
+      <option value="salud" data-i18n="cat-salud">Salud</option>
+      <option value="fitness" data-i18n="cat-fitness">Fitness</option>
+      <option value="aprendizaje" data-i18n="cat-aprendizaje">Aprendizaje</option>
+      <option value="trabajo" data-i18n="cat-trabajo">Trabajo</option>
+      <option value="otro" data-i18n="cat-otro">Otro</option>
     </select>
   </div>
 
+  <!-- HEATMAP -->
+  <div class="heatmap-section">
+    <h2 id="lbl-heatmap">📊 Actividad anual</h2>
+    <div class="heatmap-wrap">
+      <div class="heatmap-months" id="heatmap-months"></div>
+      <div class="heatmap-grid" id="heatmap-grid"></div>
+    </div>
+  </div>
+
+  <!-- HABITS LIST -->
   <div class="habits-container">
     <div id="habits-list"></div>
   </div>
 </div>
 
-<!-- Modal Agregar Habito -->
+<!-- MODAL AGREGAR HÁBITO -->
 <div id="add-modal" class="modal">
   <div class="modal-content">
-    <h2>Agregar nuevo hábito</h2>
-    <div class="input-group">
-      <input type="text" id="new-habit-name" placeholder="Nombre del hábito" maxlength="50">
-    </div>
-    <div class="input-group">
-      <input type="text" id="new-habit-emoji" placeholder="Emoji (ej: 💪)" maxlength="2">
-    </div>
+    <h2 id="modal-add-title">Agregar nuevo hábito</h2>
+    <div class="input-group"><input type="text" id="new-habit-name" placeholder="Nombre del hábito" maxlength="50"></div>
+    <div class="input-group"><input type="text" id="new-habit-emoji" placeholder="Emoji (ej: 💪)" maxlength="2"></div>
     <div class="input-group">
       <select id="new-habit-category">
-        <option value="salud">Salud</option>
-        <option value="fitness">Fitness</option>
-        <option value="aprendizaje">Aprendizaje</option>
-        <option value="trabajo">Trabajo</option>
-        <option value="otro">Otro</option>
+        <option value="salud" data-i18n="cat-salud">Salud</option>
+        <option value="fitness" data-i18n="cat-fitness">Fitness</option>
+        <option value="aprendizaje" data-i18n="cat-aprendizaje">Aprendizaje</option>
+        <option value="trabajo" data-i18n="cat-trabajo">Trabajo</option>
+        <option value="otro" data-i18n="cat-otro">Otro</option>
       </select>
     </div>
     <div class="modal-buttons">
-      <button class="btn btn-cancel" onclick="closeModal('add-modal')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveHabit()">Agregar</button>
+      <button class="btn btn-cancel" onclick="closeModal('add-modal')" id="btn-cancel-lbl">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveHabit()" id="btn-save-lbl">Agregar</button>
     </div>
   </div>
 </div>
 
-<!-- Toast -->
-<div id="toast"></div>
+<!-- MODAL CALENDARIO -->
+<div id="cal-modal" class="modal">
+  <div class="modal-content">
+    <h2 id="cal-habit-title">📅 Calendario</h2>
+    <div class="calendar-wrap">
+      <div class="calendar-header">
+        <button class="cal-nav" onclick="calNav(-1)">‹</button>
+        <span id="cal-month-label" style="font-weight:600;"></span>
+        <button class="cal-nav" onclick="calNav(1)">›</button>
+      </div>
+      <div class="calendar-grid" id="cal-grid"></div>
+    </div>
+    <div style="margin-top:1rem;font-size:0.8rem;opacity:0.6;display:flex;gap:1.5rem;flex-wrap:wrap;">
+      <span>🟢 <span id="lbl-completed">Completado</span></span>
+      <span>🟣 <span id="lbl-today">Hoy</span></span>
+    </div>
+    <div class="modal-buttons" style="margin-top:1.2rem;">
+      <button class="btn btn-cancel" onclick="closeModal('cal-modal')" id="btn-close-cal">Cerrar</button>
+    </div>
+  </div>
+</div>
 
-<!-- App Logic (sin Firebase) -->
+<div id="toast"></div>
 <script src="app.js"></script>
 </body>
 </html>
