@@ -1,120 +1,162 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Streakly - Construye hábitos. Mantén tu racha.</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #fff; }
-    .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; background: linear-gradient(135deg, #0f0f1a 0%, #1a1a3e 50%, #0f0f1a 100%); }
-    .logo { font-size: 4rem; margin-bottom: 1rem; }
-    h1 { font-size: 3.5rem; font-weight: 800; background: linear-gradient(90deg, #FF6B35, #FF8C42, #FFA500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
-    .tagline { font-size: 1.4rem; color: #a0a0c0; margin-bottom: 2.5rem; max-width: 600px; }
-    .badge { display: inline-block; background: rgba(255,107,53,0.15); border: 1px solid rgba(255,107,53,0.4); color: #FF6B35; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.9rem; margin-bottom: 2rem; }
-    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; max-width: 900px; margin: 3rem auto; padding: 0 1rem; }
-    .feature-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,107,53,0.2); border-radius: 16px; padding: 2rem; text-align: center; transition: transform 0.3s; }
-    .feature-card:hover { transform: translateY(-5px); border-color: #FF6B35; }
-    .feature-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-    .feature-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; color: #FF8C42; }
-    .feature-card p { color: #a0a0c0; font-size: 0.9rem; line-height: 1.5; }
-    .tech-section { text-align: center; padding: 3rem 1rem; }
-    .tech-section h2 { font-size: 1.8rem; margin-bottom: 2rem; color: #FF8C42; }
-    .tech-tags { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; max-width: 700px; margin: 0 auto; }
-    .tech-tag { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); padding: 0.5rem 1.2rem; border-radius: 20px; font-size: 0.9rem; color: #c0c0e0; }
-    .cta { text-align: center; padding: 3rem 1rem 4rem; }
-    .btn { display: inline-block; background: linear-gradient(90deg, #FF6B35, #FF8C42); color: #fff; padding: 1rem 2.5rem; border-radius: 30px; text-decoration: none; font-size: 1.1rem; font-weight: 700; margin: 0.5rem; transition: transform 0.3s, box-shadow 0.3s; }
-    .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255,107,53,0.4); }
-    .btn-outline { background: transparent; border: 2px solid #FF6B35; color: #FF6B35; }
-    .btn-outline:hover { background: rgba(255,107,53,0.1); }
-    .streak-bar { display: flex; gap: 6px; justify-content: center; margin: 2rem 0; }
-    .streak-day { width: 36px; height: 36px; border-radius: 8px; background: #FF6B35; opacity: 0; animation: fadeIn 0.3s ease forwards; }
-    .streak-day:nth-child(1) { animation-delay: 0.1s; }
-    .streak-day:nth-child(2) { animation-delay: 0.2s; }
-    .streak-day:nth-child(3) { animation-delay: 0.3s; }
-    .streak-day:nth-child(4) { animation-delay: 0.4s; }
-    .streak-day:nth-child(5) { animation-delay: 0.5s; }
-    .streak-day:nth-child(6) { animation-delay: 0.6s; }
-    .streak-day:nth-child(7) { animation-delay: 0.7s; background: rgba(255,107,53,0.3); border: 2px dashed #FF6B35; }
-    @keyframes fadeIn { to { opacity: 1; } }
-    footer { text-align: center; padding: 2rem; color: #606080; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.05); }
-    footer a { color: #FF6B35; text-decoration: none; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Streakly - Seguimiento de Hábitos</title>
+<link rel="manifest" href="/streakly/manifest.json">
+<meta name="theme-color" content="#6c63ff">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #fff; min-height: 100vh; }
+.auth-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.auth-card { background: rgba(255,255,255,0.1); padding: 2.5rem; border-radius: 20px; backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); max-width: 400px; width: 100%; }
+.auth-card h1 { text-align: center; margin-bottom: 0.5rem; font-size: 2.5rem; }
+.auth-card p { text-align: center; opacity: 0.9; margin-bottom: 2rem; }
+.input-group { margin-bottom: 1rem; }
+.input-group input { width: 100%; padding: 0.9rem; border-radius: 10px; border: none; background: rgba(255,255,255,0.2); color: #fff; font-size: 1rem; }
+.input-group input::placeholder { color: rgba(255,255,255,0.6); }
+.btn { width: 100%; padding: 0.9rem; border-radius: 10px; border: none; font-size: 1rem; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+.btn-primary { background: #6c63ff; color: #fff; margin-bottom: 0.8rem; }
+.btn-primary:hover { background: #5a52d5; transform: translateY(-2px); }
+.btn-secondary { background: rgba(255,255,255,0.2); color: #fff; }
+.btn-secondary:hover { background: rgba(255,255,255,0.3); }
+.app-section { display: none; min-height: 100vh; background: #0f0f1e; }
+.header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.header h1 { font-size: 1.8rem; }
+.user-info { display: flex; align-items: center; gap: 1rem; }
+.btn-logout { padding: 0.6rem 1.2rem; background: rgba(255,255,255,0.2); border: none; border-radius: 8px; color: #fff; cursor: pointer; font-weight: 600; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; padding: 2rem; }
+.stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.5rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+.stat-card h3 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.stat-card p { opacity: 0.9; font-size: 0.9rem; }
+.controls { padding: 0 2rem 1rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn-add { flex: 1; min-width: 200px; padding: 1rem; background: #6c63ff; border: none; border-radius: 10px; color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; }
+.btn-add:hover { background: #5a52d5; }
+select { flex: 1; min-width: 200px; padding: 1rem; background: #2d2d44; border: none; border-radius: 10px; color: #fff; font-size: 1rem; cursor: pointer; }
+.habits-container { padding: 2rem; }
+#habits-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+.habit-card { background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); border: 2px solid rgba(108, 99, 255, 0.3); border-radius: 15px; padding: 1.5rem; display: flex; gap: 1rem; align-items: center; transition: all 0.3s; }
+.habit-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(108, 99, 255, 0.4); }
+.habit-card.completed { border-color: #4caf50; background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(56, 142, 60, 0.1) 100%); }
+.habit-emoji { font-size: 3rem; }
+.habit-info { flex: 1; }
+.habit-info h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+.category-badge { background: rgba(108, 99, 255, 0.3); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; display: inline-block; margin-bottom: 0.5rem; }
+.habit-stats { display: flex; gap: 1rem; font-size: 0.9rem; opacity: 0.8; }
+.habit-actions { display: flex; flex-direction: column; gap: 0.5rem; }
+.btn-complete { width: 50px; height: 50px; border-radius: 50%; border: none; font-size: 1.8rem; cursor: pointer; background: #6c63ff; transition: all 0.3s; }
+.btn-complete:hover { transform: scale(1.1); }
+.btn-complete.done { background: #4caf50; }
+.btn-delete { padding: 0.5rem; background: rgba(244, 67, 54, 0.2); border: none; border-radius: 8px; cursor: pointer; font-size: 1.2rem; }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
+.modal-content { background: #2d2d44; padding: 2rem; border-radius: 20px; max-width: 500px; width: 90%; }
+.modal-content h2 { margin-bottom: 1.5rem; }
+.modal-content .input-group { margin-bottom: 1rem; }
+.modal-content input, .modal-content select { width: 100%; padding: 0.9rem; background: #1a1a2e; border: 1px solid rgba(108, 99, 255, 0.3); border-radius: 8px; color: #fff; font-size: 1rem; }
+.modal-buttons { display: flex; gap: 1rem; margin-top: 1.5rem; }
+.btn-cancel { background: rgba(255,255,255,0.1); }
+#toast { position: fixed; bottom: 2rem; right: 2rem; background: #6c63ff; color: #fff; padding: 1rem 2rem; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); opacity: 0; transform: translateY(100px); transition: all 0.3s; z-index: 2000; }
+#toast.show { opacity: 1; transform: translateY(0); }
+.empty-state { text-align: center; padding: 3rem; opacity: 0.6; }
+</style>
 </head>
 <body>
-  <section class="hero">
-    <div class="logo">🔥</div>
-    <div class="badge">✨ Proyecto Final DAM · Universae 2026</div>
-    <h1>Streakly</h1>
-    <p class="tagline">Construye hábitos poderosos. Mantén tu racha. Transforma tu rutina diaria en resultados reales.</p>
-    <div class="streak-bar">
-      <div class="streak-day"></div>
-      <div class="streak-day"></div>
-      <div class="streak-day"></div>
-      <div class="streak-day"></div>
-      <div class="streak-day"></div>
-      <div class="streak-day"></div>
-      <div class="streak-day"></div>
-    </div>
-  </section>
 
-  <section class="features">
-    <div class="feature-card">
-      <div class="feature-icon">🎯</div>
-      <h3>Seguimiento de Hábitos</h3>
-      <p>Crea y gestiona tus hábitos diarios con un sistema visual e intuitivo.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🔥</div>
-      <h3>Rachas Consecutivas</h3>
-      <p>Visualiza tus rachas y mantén la motivación para no romper la cadena.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">📈</div>
-      <h3>Estadísticas</h3>
-      <p>Analiza tu progreso con gráficas y reportes de tus logros acumulados.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🔔</div>
-      <h3>Recordatorios</h3>
-      <p>Notificaciones inteligentes para que nunca olvides completar tu rutina.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">💾</div>
-      <h3>Sincronización</h3>
-      <p>Tus datos siempre seguros y sincronizados con Firebase en la nube.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🔒</div>
-      <h3>Autenticación Segura</h3>
-      <p>Accede con tu cuenta de Google o crea una cuenta con email y contraseña.</p>
-    </div>
-  </section>
+<!-- Seccion Autenticacion -->
+<div id="auth-section" class="auth-section">
+<div class="auth-card">
+<h1>🔥 Streakly</h1>
+<p>Construye hábitos. Mantén tu racha.</p>
+<div class="input-group">
+<input type="email" id="email" placeholder="Email">
+</div>
+<div class="input-group">
+<input type="password" id="password" placeholder="Contraseña">
+</div>
+<button class="btn btn-primary" onclick="loginWithEmail()">Iniciar sesión</button>
+<button class="btn btn-secondary" onclick="registerWithEmail()">Crear cuenta</button>
+<button class="btn btn-secondary" onclick="loginWithGoogle()">🔑 Entrar con Google</button>
+</div>
+</div>
 
-  <section class="tech-section">
-    <h2>🛠️ Tecnologías</h2>
-    <div class="tech-tags">
-      <span class="tech-tag">Kotlin</span>
-      <span class="tech-tag">Android Studio</span>
-      <span class="tech-tag">Firebase Firestore</span>
-      <span class="tech-tag">Firebase Auth</span>
-      <span class="tech-tag">XML Layouts</span>
-      <span class="tech-tag">Material Design</span>
-      <span class="tech-tag">MVVM</span>
-      <span class="tech-tag">SQLite</span>
-      <span class="tech-tag">API REST</span>
-    </div>
-  </section>
+<!-- Seccion App -->
+<div id="app-section" class="app-section">
+<header class="header">
+<h1>🔥 Streakly</h1>
+<div class="user-info">
+<span id="user-name">Usuario</span>
+<button class="btn-logout" onclick="logout()">Salir</button>
+</div>
+</header>
 
-  <section class="cta">
-    <h2 style="font-size:2rem; margin-bottom:1.5rem;">Desarrollado por</h2>
-    <p style="color:#a0a0c0; font-size:1.1rem; margin-bottom:2rem;">Aníbal José Guerrero González<br>Técnico Superior en Desarrollo de Aplicaciones Multiplataforma</p>
-    <a href="https://github.com/Anibaljgg/streakly" class="btn">🐝 Ver en GitHub</a>
-    <a href="https://console.firebase.google.com" class="btn btn-outline">🔥 Firebase Project</a>
-  </section>
+<div class="stats">
+<div class="stat-card">
+<h3 id="stat-total">0</h3>
+<p>Hábitos totales</p>
+</div>
+<div class="stat-card">
+<h3 id="stat-today">0</h3>
+<p>Completados hoy</p>
+</div>
+<div class="stat-card">
+<h3 id="stat-streak">0</h3>
+<p>Mejor racha</p>
+</div>
+</div>
 
-  <footer>
-    <p>Streakly &copy; 2026 · Proyecto Final DAM · <a href="https://github.com/Anibaljgg">Anibaljgg</a> · Hecho con ❤️ en Zürich, Suiza</p>
-  </footer>
+<div class="controls">
+<button class="btn-add" onclick="openModal('add-modal')">➕ Agregar hábito</button>
+<select id="filter-category" onchange="renderHabits()">
+<option value="all">Todas las categorías</option>
+<option value="salud">Salud</option>
+<option value="fitness">Fitness</option>
+<option value="aprendizaje">Aprendizaje</option>
+<option value="trabajo">Trabajo</option>
+<option value="otro">Otro</option>
+</select>
+</div>
+
+<div class="habits-container">
+<div id="habits-list"></div>
+</div>
+</div>
+
+<!-- Modal Agregar Habito -->
+<div id="add-modal" class="modal">
+<div class="modal-content">
+<h2>Agregar nuevo hábito</h2>
+<div class="input-group">
+<input type="text" id="new-habit-name" placeholder="Nombre del hábito">
+</div>
+<div class="input-group">
+<input type="text" id="new-habit-emoji" placeholder="Emoji (ej: 💪)" maxlength="2">
+</div>
+<div class="input-group">
+<select id="new-habit-category">
+<option value="salud">Salud</option>
+<option value="fitness">Fitness</option>
+<option value="aprendizaje">Aprendizaje</option>
+<option value="trabajo">Trabajo</option>
+<option value="otro">Otro</option>
+</select>
+</div>
+<div class="modal-buttons">
+<button class="btn btn-cancel" onclick="closeModal('add-modal')">Cancelar</button>
+<button class="btn btn-primary" onclick="addHabit()">Agregar</button>
+</div>
+</div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+
+<!-- App Logic -->
+<script src="/streakly/app.js"></script>
 </body>
 </html>
