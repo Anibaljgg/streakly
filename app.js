@@ -1,14 +1,13 @@
 // Streakly - app.js
 // Configuracion Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyExample",
+  apiKey: "AIzaSyA0D69-UeOtJD2+ML1bxzWsOQPJbB_2m3g",
   authDomain: "streakly-c1324.firebaseapp.com",
   projectId: "streakly-c1324",
-  storageBucket: "streakly-c1324.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef"
+  storageBucket: "streakly-c1324.firebasestorage.app",
+  messagingSenderId: "629706853224",
+  appId: "1:629706853224:web:1ebf20c5e9cbf5e4b164dd"
 };
-
 // Estado de la app
 let currentUser = null;
 let habits = [];
