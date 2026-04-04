@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streakly - App de Hábitos</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #fff; min-height: 100vh; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { text-align: center; margin: 30px 0; font-size: 2.5rem; }
+        .add-habit { background: #6c63ff; color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.1rem; cursor: pointer; margin: 20px 0; width: 100%; }
+        .add-habit:hover { background: #5a52d5; }
+        .habits-list { margin-top: 30px; }
+        .habit-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 15px; margin-bottom: 15px; }
+        .habit-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .habit-emoji { font-size: 2rem; }
+        .habit-name { font-size: 1.3rem; font-weight: 600; }
+        .habit-actions { display: flex; gap: 10px; margin-top: 15px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; }
+        .btn-complete { background: #4CAF50; color: white; flex: 1; }
+        .btn-complete.completed { background: #2196F3; }
+        .btn-delete { background: #f44336; color: white; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 15px; text-align: center; }
+        .stat-value { font-size: 2.5rem; font-weight: bold; margin-bottom: 5px; }
+        .stat-label { font-size: 0.9rem; opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 Streakly</h1>
+        
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="total-habits">0</div>
+                <div class="stat-label">Hábitos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="completed-today">0</div>
+                <div class="stat-label">Hoy</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-streak">0</div>
+                <div class="stat-label">Racha Total</div>
+            </div>
+        </div>
+
+        <button class="add-habit" onclick="addHabit()">➕ Añadir Hábito</button>
+        
+        <div class="habits-list" id="habits-list"></div>
+    </div>
+
+    <script>
+        let habits = [];
+
+        // Cargar datos al iniciar
+        function init() {
+            const saved = localStorage.getItem('streakly-habits-simple');
+            if (saved) {
+                habits = JSON.parse(saved);
+            }
+            render();
+        }
+
+        // Guardar datos
+        function save() {
+            localStorage.setItem('streakly-habits-simple', JSON.stringify(habits));
+        }
+
+        // Añadir hábito
+        function addHabit() {
+            const name = prompt('¿Qué hábito quieres crear?');
+            if (!name) return;
+            
+            const emoji = prompt('Elige un emoji (ej: 💪, 📚, 🏃) o deja vacío:') || '✅';
+            
+            const habit = {
+                id: Date.now(),
+                name: name,
+                emoji: emoji,
+                completedDates: [],
+                streak: 0
+            };
+            
+            habits.push(habit);
+            save();
+            render();
+        }
+
+        // Marcar como completado
+        function toggleHabit(id) {
+            const habit = habits.find(h => h.id === id);
+            if (!habit) return;
+            
+            const today = new Date().toISOString().split('T')[0];
+            const index = habit.completedDates.indexOf(today);
+            
+            if (index > -1) {
+                habit.completedDates.splice(index, 1);
+            } else {
+                habit.completedDates.push(today);
+            }
+            
+            habit.streak = calculateStreak(habit.completedDates);
+            save();
+            render();
+        }
+
+        // Calcular racha
+        function calculateStreak(dates) {
+            if (dates.length === 0) return 0;
+            
+            const sorted = dates.sort().reverse();
+            const today = new Date().toISOString().split('T')[0];
+            
+            let streak = 0;
+            let checkDate = new Date();
+            
+            for (let i = 0; i < sorted.length; i++) {
+                const dateStr = checkDate.toISOString().split('T')[0];
+                if (sorted[i] === dateStr) {
+                    streak++;
+                    checkDate.setDate(checkDate.getDate() - 1);
+                } else {
+                    break;
+                }
+            }
+            
+            return streak;
+        }
+
+        // Eliminar hábito
+        function deleteHabit(id) {
+            if (!confirm('¿Seguro que quieres eliminar este hábito?')) return;
+            habits = habits.filter(h => h.id !== id);
+            save();
+            render();
+        }
+
+        // Renderizar
+        function render() {
+            const container = document.getElementById('habits-list');
+            const today = new Date().toISOString().split('T')[0];
+            
+            if (habits.length === 0) {
+                container.innerHTML = '<p style="text-align: center; opacity: 0.7; padding: 40px 0;">¡Añade tu primer hábito para empezar!</p>';
+            } else {
+                container.innerHTML = habits.map(habit => {
+                    const isCompleted = habit.completedDates.includes(today);
+                    return `
+                        <div class="habit-card">
+                            <div class="habit-header">
+                                <span class="habit-emoji">${habit.emoji}</span>
+                                <span class="habit-name">${habit.name}</span>
+                            </div>
+                            <div>
+                                <strong>Racha:</strong> ${habit.streak} días 🔥 | 
+                                <strong>Total:</strong> ${habit.completedDates.length} veces
+                            </div>
+                            <div class="habit-actions">
+                                <button class="btn btn-complete ${isCompleted ? 'completed' : ''}" onclick="toggleHabit(${habit.id})">
+                                    ${isCompleted ? '✓ Completado hoy' : 'Marcar completado'}
+                                </button>
+                                <button class="btn btn-delete" onclick="deleteHabit(${habit.id})">🗑️</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            // Actualizar estadísticas
+            document.getElementById('total-habits').textContent = habits.length;
+            document.getElementById('completed-today').textContent = habits.filter(h => h.completedDates.includes(today)).length;
+            document.getElementById('total-streak').textContent = habits.reduce((sum, h) => sum + h.streak, 0);
+        }
+
+        // Iniciar app
+        init();
+    </script>
+</body>
+</html>
