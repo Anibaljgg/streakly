@@ -349,14 +349,19 @@
             GoogleAuthProvider, 
             onAuthStateChanged, 
             signOut,
-            const firebaseConfig = {
-    apiKey: "AIzaSyA0D69-UeOtJD2rML1bxzWsOQPJbB_2m3g",
-    authDomain: "streakly-c1324.firebaseapp.com",
-    projectId: "streakly-c1324",
-    storageBucket: "streakly-c1324.firebasestorage.app",
-    messagingSenderId: "629706853224",
-    appId: "1:629706853224:web:1ebf20c5e9cbf5e4b164dd"
-};
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA0D69-UeOtJD2rML1bxzWsOQPJbB_2m3g",
+            authDomain: "streakly-c1324.firebaseapp.com",
+            projectId: "streakly-c1324",
+            storageBucket: "streakly-c1324.firebasestorage.app",
+            messagingSenderId: "629706853224",
+            appId: "1:629706853224:web:1ebf20c5e9cbf5e4b164dd"
+        };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
