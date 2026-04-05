@@ -1,230 +1,879 @@
 <!DOCTYPE html>
-<html lang="es" id="html-root">
+<html lang="es" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Streakly</title>
-<link rel="manifest" href="/streakly/manifest.json">
-<meta name="theme-color" content="#6c63ff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #fff; min-height: 100vh; }
+/* ── TOKENS ───────────────────────────────────────────────────── */
+:root{
+  --font-display:'Sora',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --text-xs:clamp(.75rem,.7rem + .25vw,.875rem);
+  --text-sm:clamp(.875rem,.8rem + .35vw,1rem);
+  --text-base:clamp(1rem,.95rem + .25vw,1.125rem);
+  --text-lg:clamp(1.125rem,1rem + .75vw,1.5rem);
+  --text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
+  --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;
+  --space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;
+  --space-12:3rem;--space-16:4rem;
+  --r-sm:.375rem;--r-md:.5rem;--r-lg:.75rem;--r-xl:1rem;--r-2xl:1.5rem;--r-full:9999px;
+  --ease:180ms cubic-bezier(.16,1,.3,1);
+}
+[data-theme="dark"]{
+  --bg:#0f0f14;--s1:#16161e;--s2:#1c1c26;--s3:#232330;
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.14);
+  --tx:#e8e8f0;--txm:#8888a0;--txf:#4a4a60;
+  --p:#2dd4bf;--ph:#14b8a6;--pd:rgba(45,212,191,.12);--pg:rgba(45,212,191,.25);
+  --red:#f87171;--redd:rgba(248,113,113,.15);
+  --yel:#fbbf24;--yeld:rgba(251,191,36,.15);
+  --grn:#4ade80;--grnd:rgba(74,222,128,.15);
+  --sh-sm:0 1px 3px rgba(0,0,0,.4);--sh-md:0 4px 16px rgba(0,0,0,.5);--sh-lg:0 12px 40px rgba(0,0,0,.6);
+}
+[data-theme="light"]{
+  --bg:#f4f4f8;--s1:#fff;--s2:#f8f8fc;--s3:#ededf5;
+  --border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.14);
+  --tx:#1a1a2e;--txm:#606080;--txf:#aaaacc;
+  --p:#0d9488;--ph:#0f766e;--pd:rgba(13,148,136,.1);--pg:rgba(13,148,136,.2);
+  --red:#dc2626;--redd:rgba(220,38,38,.1);
+  --yel:#d97706;--yeld:rgba(217,119,6,.1);
+  --grn:#16a34a;--grnd:rgba(22,163,74,.1);
+  --sh-sm:0 1px 3px rgba(0,0,0,.08);--sh-md:0 4px 16px rgba(0,0,0,.1);--sh-lg:0 12px 40px rgba(0,0,0,.14);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{font-family:var(--font-body);font-size:var(--text-base);background:var(--bg);color:var(--tx);min-height:100dvh;overflow-x:hidden}
+button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
+input,textarea,select{font:inherit;color:inherit;background:none;border:none;outline:none}
+img{display:block;max-width:100%}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
 
-/* ── AUTH ── */
-.auth-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: relative; }
-.auth-card { background: rgba(255,255,255,0.1); padding: 2.5rem; border-radius: 20px; backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); max-width: 400px; width: 100%; }
-.auth-card h1 { text-align: center; margin-bottom: 0.5rem; font-size: 2.5rem; }
-.auth-card p { text-align: center; opacity: 0.9; margin-bottom: 2rem; }
-.input-group { margin-bottom: 1rem; }
-.input-group input { width: 100%; padding: 0.9rem; border-radius: 10px; border: none; background: rgba(255,255,255,0.2); color: #fff; font-size: 1rem; }
-.input-group input::placeholder { color: rgba(255,255,255,0.6); }
-.btn { width: 100%; padding: 0.9rem; border-radius: 10px; border: none; font-size: 1rem; cursor: pointer; font-weight: 600; transition: all 0.3s; }
-.btn-primary { background: #6c63ff; color: #fff; margin-bottom: 0.8rem; }
-.btn-primary:hover { background: #5a52d5; transform: translateY(-2px); }
-.btn-secondary { background: rgba(255,255,255,0.2); color: #fff; margin-bottom: 0.8rem; }
-.btn-secondary:hover { background: rgba(255,255,255,0.3); }
+/* ── SHELL ───────────────────────────────────────────────────── */
+#app{display:flex;flex-direction:column;min-height:100dvh;max-width:480px;margin:0 auto;position:relative}
+.screen{display:none;flex-direction:column;flex:1;animation:fadeIn .2s ease}
+.screen.active{display:flex}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── LANGUAGE ── */
-.lang-selector { position: absolute; top: 1.2rem; right: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
-.lang-btn { padding: 0.4rem 0.8rem; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; }
-.lang-btn.active, .lang-btn-app.active { background: rgba(255,255,255,0.35); border-color: #fff; }
-.lang-btn:hover, .lang-btn-app:hover { background: rgba(255,255,255,0.25); }
-.lang-btn-app { padding: 0.35rem 0.7rem; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.2s; }
+/* ── LOGIN ───────────────────────────────────────────────────── */
+#screen-login{align-items:center;justify-content:center;min-height:100dvh;padding:var(--space-8);background:var(--bg);position:relative;overflow:hidden}
+#screen-login::before{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,var(--pg) 0%,transparent 70%);top:-100px;left:50%;transform:translateX(-50%);pointer-events:none}
+.login-logo{font-family:var(--font-display);font-size:var(--text-xl);font-weight:700;color:var(--p);margin-bottom:var(--space-2)}
+.login-tagline{color:var(--txm);font-size:var(--text-sm);margin-bottom:var(--space-10);text-align:center}
+.login-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r-2xl);padding:var(--space-8);width:100%;max-width:360px;box-shadow:var(--sh-lg);text-align:center}
+.login-card h2{font-family:var(--font-display);font-size:var(--text-lg);font-weight:700;margin-bottom:var(--space-2)}
+.login-card p{color:var(--txm);font-size:var(--text-sm);margin-bottom:var(--space-8)}
+.btn-google{display:flex;align-items:center;justify-content:center;gap:var(--space-3);width:100%;padding:var(--space-4) var(--space-6);background:var(--s2);border:1px solid var(--border2);border-radius:var(--r-xl);font-size:var(--text-sm);font-weight:500;transition:all var(--ease)}
+.btn-google:hover{background:var(--s3);border-color:var(--p);box-shadow:0 0 0 3px var(--pd)}
+.btn-google svg{width:20px;height:20px;flex-shrink:0}
+.login-lang-picker{position:absolute;top:var(--space-5);right:var(--space-5);z-index:10}
+.lang-globe-btn{width:38px;height:38px;border-radius:var(--r-full);background:var(--s1);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--ease);font-size:18px;box-shadow:var(--sh-sm)}
+.lang-globe-btn:hover{border-color:var(--p);box-shadow:0 0 0 3px var(--pd),var(--sh-sm);transform:scale(1.08)}
+.lang-globe-btn.open{border-color:var(--p);box-shadow:0 0 0 3px var(--pd)}
+.lang-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--s1);border:1px solid var(--border);border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--sh-lg);min-width:148px;transform-origin:top right;transform:scale(0.9) translateY(-8px);opacity:0;pointer-events:none;transition:all .2s cubic-bezier(.16,1,.3,1)}
+.lang-dropdown.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all}
+.lang-option{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-4);cursor:pointer;transition:background var(--ease);font-size:var(--text-sm);font-weight:500;color:var(--txm)}
+.lang-option:hover{background:var(--s2);color:var(--tx)}
+.lang-option.active{color:var(--p);background:var(--pd)}
+.lang-option .flag{font-size:16px}
+.lang-option .check{margin-left:auto;width:14px;height:14px;color:var(--p);opacity:0}
+.lang-option.active .check{opacity:1}
 
-/* ── APP ── */
-.app-section { display: none; min-height: 100vh; background: #0f0f1e; }
-.header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); flex-wrap: wrap; gap: 0.5rem; }
-.header h1 { font-size: 1.8rem; }
-.header-right { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
-.btn-logout { padding: 0.6rem 1.2rem; background: rgba(255,255,255,0.2); border: none; border-radius: 8px; color: #fff; cursor: pointer; font-weight: 600; }
+/* ── TOPBAR ──────────────────────────────────────────────────── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:var(--space-4) var(--space-5);background:var(--s1);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;backdrop-filter:blur(12px)}
+.topbar-logo{font-family:var(--font-display);font-weight:700;font-size:var(--text-base);color:var(--p)}
+.topbar-actions{display:flex;align-items:center;gap:var(--space-3)}
+.topbar-btn{width:36px;height:36px;border-radius:var(--r-full);display:flex;align-items:center;justify-content:center;color:var(--txm);transition:all var(--ease);background:var(--s2);border:1px solid var(--border)}
+.topbar-btn:hover{color:var(--tx);background:var(--s3)}
+.topbar-btn svg{width:16px;height:16px}
 
-/* ── STATS ── */
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; padding: 2rem; }
-.stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.5rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-.stat-card h3 { font-size: 2.5rem; margin-bottom: 0.5rem; }
-.stat-card p { opacity: 0.9; font-size: 0.9rem; }
+/* ── BOTTOM NAV ──────────────────────────────────────────────── */
+.bottom-nav{display:flex;background:var(--s1);border-top:1px solid var(--border);position:sticky;bottom:0;z-index:50;padding-bottom:env(safe-area-inset-bottom)}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:var(--space-3) var(--space-2);gap:4px;color:var(--txf);font-size:10px;font-weight:500;transition:all var(--ease);cursor:pointer;border:none;background:none;position:relative}
+.nav-item svg{width:20px;height:20px}
+.nav-item.active{color:var(--p)}
+.nav-item.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:32px;height:2px;background:var(--p);border-radius:0 0 4px 4px}
 
-/* ── CONTROLS ── */
-.controls { padding: 0 2rem 1rem; display: flex; gap: 1rem; flex-wrap: wrap; }
-.btn-add { flex: 1; min-width: 200px; padding: 1rem; background: #6c63ff; border: none; border-radius: 10px; color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; }
-.btn-add:hover { background: #5a52d5; }
-select { flex: 1; min-width: 200px; padding: 1rem; background: #2d2d44; border: none; border-radius: 10px; color: #fff; font-size: 1rem; cursor: pointer; }
+/* ── CONTENT ─────────────────────────────────────────────────── */
+.content{flex:1;overflow-y:auto;padding:var(--space-5);padding-bottom:var(--space-10)}
+.content-full{flex:1;overflow-y:auto}
 
-/* ── HABITS ── */
-.habits-container { padding: 0 2rem 2rem; }
-#habits-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
-.habit-card { background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%); border: 2px solid rgba(108,99,255,0.3); border-radius: 15px; padding: 1.5rem; display: flex; gap: 1rem; align-items: center; transition: all 0.3s; }
-.habit-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(108,99,255,0.4); }
-.habit-card.completed { border-color: #4caf50; background: linear-gradient(135deg, rgba(76,175,80,0.1) 0%, rgba(56,142,60,0.1) 100%); }
-.habit-emoji { font-size: 3rem; }
-.habit-info { flex: 1; }
-.habit-info h3 { font-size: 1.2rem; margin-bottom: 0.4rem; }
-.category-badge { background: rgba(108,99,255,0.3); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; display: inline-block; margin-bottom: 0.5rem; }
-.habit-stats { display: flex; gap: 1rem; font-size: 0.9rem; opacity: 0.8; }
-.habit-actions { display: flex; flex-direction: column; gap: 0.5rem; }
-.btn-complete { width: 50px; height: 50px; border-radius: 50%; border: none; font-size: 1.8rem; cursor: pointer; background: #6c63ff; color: #fff; transition: all 0.3s; }
-.btn-complete:hover { transform: scale(1.1); }
-.btn-complete.done { background: #4caf50; }
-.btn-delete { padding: 0.5rem; background: rgba(244,67,54,0.2); border: none; border-radius: 8px; cursor: pointer; font-size: 1.2rem; }
-.empty-state { text-align: center; padding: 3rem; opacity: 0.6; grid-column: 1/-1; }
+/* ── STREAK BANNER ───────────────────────────────────────────── */
+.streak-banner{background:linear-gradient(135deg,var(--pd),rgba(45,212,191,.05));border:1px solid var(--pg);border-radius:var(--r-xl);padding:var(--space-4) var(--space-5);display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-5)}
+.streak-icon{font-size:2rem}
+.streak-days{font-family:var(--font-display);font-size:var(--text-xl);font-weight:700;color:var(--p);line-height:1}
+.streak-label{font-size:var(--text-xs);color:var(--txm);margin-top:2px}
 
-/* ── HEATMAP ── */
-.heatmap-section { padding: 0 2rem 2rem; }
-.heatmap-section h2 { margin-bottom: 1rem; font-size: 1.2rem; opacity: 0.9; }
-.heatmap-wrap { background: rgba(255,255,255,0.04); border-radius: 15px; padding: 1.5rem; overflow-x: auto; }
-.heatmap-grid { display: flex; gap: 3px; align-items: flex-start; }
-.heatmap-col { display: flex; flex-direction: column; gap: 3px; }
-.heatmap-cell { width: 13px; height: 13px; border-radius: 2px; background: #1e1e3a; transition: background 0.2s; position: relative; cursor: default; }
-.heatmap-cell:hover::after { content: attr(data-tip); position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; white-space: nowrap; z-index: 10; pointer-events: none; }
-.heatmap-cell.l1 { background: #1e3a2a; }
-.heatmap-cell.l2 { background: #2d6a3f; }
-.heatmap-cell.l3 { background: #3d9e57; }
-.heatmap-cell.l4 { background: #4caf50; }
-.heatmap-months { display: flex; gap: 3px; margin-bottom: 4px; font-size: 0.7rem; opacity: 0.6; }
+/* ── KPI ─────────────────────────────────────────────────────── */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3);margin-bottom:var(--space-6)}
+.kpi-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--space-4);text-align:center}
+.kpi-value{font-family:var(--font-display);font-size:var(--text-lg);font-weight:700;color:var(--p);line-height:1;margin-bottom:4px}
+.kpi-label{font-size:var(--text-xs);color:var(--txm)}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-4)}
+.section-title{font-family:var(--font-display);font-weight:600;font-size:var(--text-base)}
+.section-action{font-size:var(--text-xs);color:var(--p);cursor:pointer}
+.greeting{margin-bottom:var(--space-6)}
+.greeting-name{font-family:var(--font-display);font-size:var(--text-lg);font-weight:700;margin-bottom:var(--space-1)}
+.greeting-sub{color:var(--txm);font-size:var(--text-sm)}
 
-/* ── CALENDAR ── */
-.calendar-wrap { padding: 1rem 0; }
-.calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-.cal-nav { background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 1.3rem; cursor: pointer; padding: 0.3rem 0.8rem; border-radius: 8px; }
-.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
-.cal-day-name { text-align: center; font-size: 0.75rem; opacity: 0.6; padding: 4px 0; }
-.cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 0.85rem; }
-.cal-day.empty { background: transparent; }
-.cal-day.normal { background: rgba(255,255,255,0.05); }
-.cal-day.today { background: rgba(108,99,255,0.4); font-weight: 700; }
-.cal-day.completed { background: #4caf50; font-weight: 600; }
+/* ── TASK CARD ───────────────────────────────────────────────── */
+.task-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--space-4);display:flex;align-items:flex-start;gap:var(--space-3);margin-bottom:var(--space-3);transition:all var(--ease);cursor:pointer}
+.task-card:hover{border-color:var(--border2);box-shadow:var(--sh-sm)}
+.task-card.completed{opacity:.55}
+.task-card.completed .task-title{text-decoration:line-through}
+.task-check{width:22px;height:22px;border-radius:var(--r-full);border:2px solid var(--border2);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all var(--ease);background:transparent}
+.task-check.done{background:var(--p);border-color:var(--p)}
+.task-check.done svg{display:block}
+.task-check svg{display:none;width:12px;height:12px;color:#0f0f14}
+.task-body{flex:1;min-width:0}
+.task-title{font-weight:500;font-size:var(--text-sm);margin-bottom:var(--space-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.task-meta{display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap}
+.task-badge{font-size:11px;padding:2px 8px;border-radius:var(--r-full);font-weight:500}
+.badge-high{background:var(--redd);color:var(--red)}
+.badge-medium{background:var(--yeld);color:var(--yel)}
+.badge-low{background:var(--grnd);color:var(--grn)}
+.badge-overdue{background:var(--redd);color:var(--red)}
+.badge-date{background:var(--s3);color:var(--txm)}
+.task-action-btn{width:30px;height:30px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;color:var(--txf);transition:all var(--ease)}
+.task-action-btn:hover{color:var(--txm);background:var(--s3)}
+.task-action-btn.del:hover{color:var(--red);background:var(--redd)}
+.task-action-btn svg{width:14px;height:14px}
+.empty-state{text-align:center;padding:var(--space-16) var(--space-8)}
+.empty-state-icon{font-size:3rem;margin-bottom:var(--space-4)}
+.empty-state h3{font-family:var(--font-display);font-weight:600;margin-bottom:var(--space-2)}
+.empty-state p{color:var(--txm);font-size:var(--text-sm);margin-bottom:var(--space-6)}
 
-/* ── MODAL ── */
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; overflow-y: auto; padding: 1rem; }
-.modal-content { background: #2d2d44; padding: 2rem; border-radius: 20px; max-width: 540px; width: 100%; }
-.modal-content h2 { margin-bottom: 1.2rem; }
-.modal-content .input-group { margin-bottom: 1rem; }
-.modal-content input, .modal-content select { width: 100%; padding: 0.9rem; background: #1a1a2e; border: 1px solid rgba(108,99,255,0.3); border-radius: 8px; color: #fff; font-size: 1rem; }
-.modal-buttons { display: flex; gap: 1rem; margin-top: 1.2rem; }
-.btn-cancel { background: rgba(255,255,255,0.1); color: #fff; }
+/* ── FAB ─────────────────────────────────────────────────────── */
+.fab{position:fixed;bottom:calc(70px + var(--space-4));right:var(--space-5);width:52px;height:52px;border-radius:var(--r-full);background:var(--p);color:#0f0f14;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px var(--pg);transition:all var(--ease);z-index:40}
+.fab:hover{background:var(--ph);transform:scale(1.05)}
+.fab svg{width:22px;height:22px}
 
-/* ── TOAST ── */
-#toast { position: fixed; bottom: 2rem; right: 2rem; background: #6c63ff; color: #fff; padding: 1rem 2rem; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); opacity: 0; transform: translateY(100px); transition: all 0.3s; z-index: 2000; }
-#toast.show { opacity: 1; transform: translateY(0); }
+/* ── FILTERS ─────────────────────────────────────────────────── */
+.filter-bar{display:flex;gap:var(--space-2);padding:var(--space-4) var(--space-5);overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border)}
+.filter-bar::-webkit-scrollbar{display:none}
+.filter-pill{flex-shrink:0;padding:var(--space-2) var(--space-4);border-radius:var(--r-full);font-size:var(--text-xs);font-weight:500;border:1px solid var(--border);color:var(--txm);background:var(--s1);transition:all var(--ease);cursor:pointer}
+.filter-pill.active{background:var(--pd);border-color:var(--p);color:var(--p)}
+.sort-bar{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-5);border-bottom:1px solid var(--border)}
+.sort-label{font-size:var(--text-xs);color:var(--txm)}
+.sort-select{font-size:var(--text-xs);color:var(--tx);background:var(--s2);border:1px solid var(--border);border-radius:var(--r-md);padding:4px 8px;cursor:pointer}
+
+/* ── MODAL ───────────────────────────────────────────────────── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--s1);border-radius:var(--r-2xl) var(--r-2xl) 0 0;width:100%;max-width:480px;max-height:90dvh;overflow-y:auto;padding:var(--space-6);animation:slideUp .3s cubic-bezier(.16,1,.3,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto var(--space-5)}
+.modal-title{font-family:var(--font-display);font-size:var(--text-lg);font-weight:700;margin-bottom:var(--space-6)}
+.form-field{margin-bottom:var(--space-5)}
+.form-label{font-size:var(--text-sm);font-weight:500;margin-bottom:var(--space-2);display:block;color:var(--txm)}
+.form-input{width:100%;padding:var(--space-3) var(--space-4);background:var(--s2);border:1px solid var(--border);border-radius:var(--r-lg);font-size:var(--text-sm);transition:all var(--ease)}
+.form-input:focus{border-color:var(--p);box-shadow:0 0 0 3px var(--pd)}
+.form-input::placeholder{color:var(--txf)}
+textarea.form-input{resize:none;height:80px}
+.priority-group{display:flex;gap:var(--space-2)}
+.priority-btn{flex:1;padding:var(--space-3);border-radius:var(--r-lg);border:1px solid var(--border);font-size:var(--text-xs);font-weight:600;background:var(--s2);transition:all var(--ease);cursor:pointer;text-align:center}
+.priority-btn[data-p="high"].selected{background:var(--redd);border-color:var(--red);color:var(--red)}
+.priority-btn[data-p="medium"].selected{background:var(--yeld);border-color:var(--yel);color:var(--yel)}
+.priority-btn[data-p="low"].selected{background:var(--grnd);border-color:var(--grn);color:var(--grn)}
+.btn-primary{width:100%;padding:var(--space-4);background:var(--p);color:#0f0f14;font-weight:600;border-radius:var(--r-xl);font-size:var(--text-sm);transition:all var(--ease);margin-top:var(--space-2)}
+.btn-primary:hover{background:var(--ph)}
+.btn-secondary{width:100%;padding:var(--space-4);background:var(--s2);border:1px solid var(--border);border-radius:var(--r-xl);font-size:var(--text-sm);font-weight:500;transition:all var(--ease);margin-top:var(--space-3)}
+.btn-secondary:hover{background:var(--s3)}
+
+/* ── HEATMAP ─────────────────────────────────────────────────── */
+.heatmap-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-3);margin-bottom:var(--space-6)}
+.stat-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--space-4)}
+.stat-value{font-family:var(--font-display);font-size:var(--text-lg);font-weight:700;color:var(--p)}
+.stat-label{font-size:var(--text-xs);color:var(--txm);margin-top:2px}
+.heatmap-grid-wrapper{overflow-x:auto;padding-bottom:var(--space-4)}
+.heatmap-container{display:flex;gap:3px}
+.heatmap-week{display:flex;flex-direction:column;gap:3px}
+.heatmap-cell{width:13px;height:13px;border-radius:3px;background:var(--s3);flex-shrink:0;transition:transform .1s;cursor:default}
+.heatmap-cell:hover{transform:scale(1.3)}
+.heatmap-cell.l1{background:rgba(45,212,191,.2)}
+.heatmap-cell.l2{background:rgba(45,212,191,.45)}
+.heatmap-cell.l3{background:rgba(45,212,191,.7)}
+.heatmap-cell.l4{background:var(--p)}
+.heatmap-legend{display:flex;align-items:center;gap:var(--space-2);margin-top:var(--space-4);font-size:var(--text-xs);color:var(--txm)}
+.legend-cell{width:13px;height:13px;border-radius:3px}
+.heatmap-days-labels{display:flex;flex-direction:column;gap:3px;margin-right:var(--space-2);padding-top:4px}
+.heatmap-day-label{font-size:10px;color:var(--txf);width:13px;height:13px;display:flex;align-items:center}
+
+/* ── PROFILE ─────────────────────────────────────────────────── */
+.profile-header{text-align:center;padding:var(--space-8) var(--space-5) var(--space-6);border-bottom:1px solid var(--border)}
+.profile-avatar{width:72px;height:72px;border-radius:var(--r-full);margin:0 auto var(--space-4);border:3px solid var(--p);overflow:hidden;background:var(--s3);display:flex;align-items:center;justify-content:center;font-size:2rem}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.profile-name{font-family:var(--font-display);font-size:var(--text-lg);font-weight:700;margin-bottom:4px}
+.profile-email{color:var(--txm);font-size:var(--text-xs)}
+.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-1);padding:var(--space-5);border-bottom:1px solid var(--border)}
+.profile-stat{text-align:center;padding:var(--space-3)}
+.profile-stat-value{font-family:var(--font-display);font-size:var(--text-base);font-weight:700;color:var(--p)}
+.profile-stat-label{font-size:10px;color:var(--txm);margin-top:2px}
+.settings-section{padding:var(--space-5);border-bottom:1px solid var(--border)}
+.settings-title{font-size:var(--text-xs);font-weight:600;color:var(--txm);text-transform:uppercase;letter-spacing:.08em;margin-bottom:var(--space-4)}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) 0}
+.setting-label{font-size:var(--text-sm);font-weight:500}
+.lang-select{background:var(--s2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--space-2) var(--space-3);font-size:var(--text-xs);cursor:pointer;color:var(--tx)}
+.toggle-switch{position:relative;width:44px;height:24px}
+.toggle-switch input{display:none}
+.toggle-slider{position:absolute;inset:0;background:var(--s3);border-radius:12px;cursor:pointer;transition:all var(--ease);border:1px solid var(--border)}
+.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:var(--txm);top:2px;left:2px;transition:all var(--ease)}
+.toggle-switch input:checked + .toggle-slider{background:var(--pd);border-color:var(--p)}
+.toggle-switch input:checked + .toggle-slider::before{background:var(--p);transform:translateX(20px)}
+.btn-danger{width:calc(100% - 2*var(--space-5));margin:var(--space-5);padding:var(--space-4);background:var(--redd);border:1px solid var(--red);color:var(--red);border-radius:var(--r-xl);font-weight:600;font-size:var(--text-sm);transition:all var(--ease)}
+.btn-danger:hover{background:var(--red);color:white}
+
+/* ── ADMIN ───────────────────────────────────────────────────── */
+.admin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-3);margin-bottom:var(--space-6)}
+.admin-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--space-4)}
+.admin-value{font-family:var(--font-display);font-size:var(--text-xl);font-weight:700;color:var(--p)}
+.admin-label{font-size:var(--text-xs);color:var(--txm);margin-top:4px}
+.users-table{background:var(--s1);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden}
+.users-table-header{display:grid;grid-template-columns:1fr auto;padding:var(--space-3) var(--space-4);background:var(--s3);font-size:var(--text-xs);font-weight:600;color:var(--txm);text-transform:uppercase}
+.user-row{display:grid;grid-template-columns:1fr auto;align-items:center;padding:var(--space-3) var(--space-4);border-top:1px solid var(--border)}
+.user-name{font-size:var(--text-sm);font-weight:500}
+.user-email{font-size:var(--text-xs);color:var(--txm)}
+.user-tasks{font-size:var(--text-sm);font-weight:600;color:var(--p);text-align:right}
+.admin-badge{display:inline-flex;align-items:center;gap:6px;background:var(--redd);border:1px solid var(--red);color:var(--red);font-size:var(--text-xs);font-weight:600;padding:3px 10px;border-radius:var(--r-full);margin-left:var(--space-3)}
+
+/* ── TOAST ───────────────────────────────────────────────────── */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--s3);border:1px solid var(--border2);border-radius:var(--r-full);padding:var(--space-3) var(--space-5);font-size:var(--text-sm);font-weight:500;z-index:200;opacity:0;transition:all .3s ease;white-space:nowrap;box-shadow:var(--sh-lg)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── LOADING ─────────────────────────────────────────────────── */
+#loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:var(--space-4)}
+.loading-logo{font-family:var(--font-display);font-size:var(--text-xl);font-weight:700;color:var(--p)}
+.loading-spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(min-width:480px){#app{box-shadow:var(--sh-lg);border-left:1px solid var(--border);border-right:1px solid var(--border)}}
 </style>
 </head>
 <body>
 
-<!-- SELECTOR IDIOMA (auth) -->
-<div class="lang-selector" id="lang-selector-auth">
-  <button class="lang-btn active" onclick="setLang('es')">ES</button>
-  <button class="lang-btn" onclick="setLang('en')">EN</button>
-  <button class="lang-btn" onclick="setLang('de')">DE</button>
-  <button class="lang-btn" onclick="setLang('fr')">FR</button>
-  <button class="lang-btn" onclick="setLang('pt')">PT</button>
+<div id="loading-screen">
+  <div class="loading-logo">🔥 Streakly</div>
+  <div class="loading-spinner"></div>
 </div>
 
-<!-- AUTH -->
-<div id="auth-section" class="auth-section">
-  <div class="auth-card">
-    <h1>🔥 Streakly</h1>
-    <p id="auth-subtitle">Construye hábitos. Mantén tu racha.</p>
-    <div class="input-group"><input type="email" id="email" placeholder="Email"></div>
-    <div class="input-group"><input type="password" id="password" placeholder="Password"></div>
-    <button class="btn btn-primary" onclick="loginWithEmail()" id="btn-login-lbl">Iniciar sesión</button>
-    <button class="btn btn-secondary" onclick="registerWithEmail()" id="btn-register-lbl">Crear cuenta</button>
-    <button class="btn btn-secondary" onclick="loginWithGoogle()">🔑 <span id="btn-google-lbl">Entrar con Google</span></button>
-  </div>
-</div>
+<div class="toast" id="toast"></div>
 
-<!-- APP -->
-<div id="app-section" class="app-section">
-  <header class="header">
-    <h1>🔥 Streakly</h1>
-    <div class="header-right">
-      <button class="lang-btn-app active" onclick="setLang('es')">ES</button>
-      <button class="lang-btn-app" onclick="setLang('en')">EN</button>
-      <button class="lang-btn-app" onclick="setLang('de')">DE</button>
-      <button class="lang-btn-app" onclick="setLang('fr')">FR</button>
-      <button class="lang-btn-app" onclick="setLang('pt')">PT</button>
-      <span id="user-name" style="opacity:0.8;font-size:0.9rem;"></span>
-      <button class="btn-logout" onclick="logout()" id="btn-logout-lbl">Salir</button>
+<!-- Modal Crear/Editar -->
+<div class="modal-overlay" id="task-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h2 class="modal-title" id="modal-title">Nueva tarea</h2>
+    <input type="hidden" id="edit-task-id">
+    <div class="form-field">
+      <label class="form-label" id="lbl-name">Nombre</label>
+      <input type="text" class="form-input" id="task-name-input" placeholder="¿Qué tienes que hacer?">
     </div>
-  </header>
-
-  <div class="stats">
-    <div class="stat-card"><h3 id="stat-total">0</h3><p id="lbl-total-habits">Hábitos totales</p></div>
-    <div class="stat-card"><h3 id="stat-today">0</h3><p id="lbl-completed-today">Completados hoy</p></div>
-    <div class="stat-card"><h3 id="stat-streak">0</h3><p id="lbl-best-streak">Mejor racha</p></div>
-  </div>
-
-  <div class="controls">
-    <button class="btn-add" onclick="openModal('add-modal')" id="btn-add-lbl">➕ Agregar hábito</button>
-    <select id="filter-category" onchange="renderHabits()">
-      <option value="all" data-i18n="filter-all">Todas las categorías</option>
-      <option value="salud" data-i18n="cat-salud">Salud</option>
-      <option value="fitness" data-i18n="cat-fitness">Fitness</option>
-      <option value="aprendizaje" data-i18n="cat-aprendizaje">Aprendizaje</option>
-      <option value="trabajo" data-i18n="cat-trabajo">Trabajo</option>
-      <option value="otro" data-i18n="cat-otro">Otro</option>
-    </select>
-  </div>
-
-  <!-- HEATMAP -->
-  <div class="heatmap-section">
-    <h2 id="lbl-heatmap">📊 Actividad anual</h2>
-    <div class="heatmap-wrap">
-      <div class="heatmap-months" id="heatmap-months"></div>
-      <div class="heatmap-grid" id="heatmap-grid"></div>
+    <div class="form-field">
+      <label class="form-label" id="lbl-deadline">Fecha límite</label>
+      <input type="datetime-local" class="form-input" id="task-deadline-input">
     </div>
-  </div>
-
-  <!-- HABITS LIST -->
-  <div class="habits-container">
-    <div id="habits-list"></div>
+    <div class="form-field">
+      <label class="form-label" id="lbl-priority">Prioridad</label>
+      <div class="priority-group">
+        <button class="priority-btn" data-p="high" onclick="selectPriority('high')" id="p-high">Alta</button>
+        <button class="priority-btn selected" data-p="medium" onclick="selectPriority('medium')" id="p-medium">Media</button>
+        <button class="priority-btn" data-p="low" onclick="selectPriority('low')" id="p-low">Baja</button>
+      </div>
+    </div>
+    <div class="form-field">
+      <label class="form-label" id="lbl-notes">Notas</label>
+      <textarea class="form-input" id="task-notes-input" placeholder="Notas adicionales..."></textarea>
+    </div>
+    <button class="btn-primary" onclick="saveTask()" id="modal-save-btn">Crear tarea</button>
+    <button class="btn-secondary" onclick="closeModal()" id="btn-cancel">Cancelar</button>
   </div>
 </div>
 
-<!-- MODAL AGREGAR HÁBITO -->
-<div id="add-modal" class="modal">
-  <div class="modal-content">
-    <h2 id="modal-add-title">Agregar nuevo hábito</h2>
-    <div class="input-group"><input type="text" id="new-habit-name" placeholder="Nombre del hábito" maxlength="50"></div>
-    <div class="input-group"><input type="text" id="new-habit-emoji" placeholder="Emoji (ej: 💪)" maxlength="2"></div>
-    <div class="input-group">
-      <select id="new-habit-category">
-        <option value="salud" data-i18n="cat-salud">Salud</option>
-        <option value="fitness" data-i18n="cat-fitness">Fitness</option>
-        <option value="aprendizaje" data-i18n="cat-aprendizaje">Aprendizaje</option>
-        <option value="trabajo" data-i18n="cat-trabajo">Trabajo</option>
-        <option value="otro" data-i18n="cat-otro">Otro</option>
+<div id="app">
+
+  <!-- LOGIN -->
+  <div class="screen active" id="screen-login">
+    <div class="login-lang-picker" id="login-lang-picker">
+      <button class="lang-globe-btn" id="lang-globe-btn" onclick="toggleLangDropdown()" title="Select language">🌍</button>
+      <div class="lang-dropdown" id="lang-dropdown">
+        <div class="lang-option active" id="llb-es" onclick="switchLoginLang('es')">
+          <span class="flag">🇪🇸</span><span>Español</span>
+          <svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 7l3.5 3.5 6.5-6.5"/></svg>
+        </div>
+        <div class="lang-option" id="llb-en" onclick="switchLoginLang('en')">
+          <span class="flag">🇬🇧</span><span>English</span>
+          <svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 7l3.5 3.5 6.5-6.5"/></svg>
+        </div>
+        <div class="lang-option" id="llb-de" onclick="switchLoginLang('de')">
+          <span class="flag">🇩🇪</span><span>Deutsch</span>
+          <svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 7l3.5 3.5 6.5-6.5"/></svg>
+        </div>
+        <div class="lang-option" id="llb-pt" onclick="switchLoginLang('pt')">
+          <span class="flag">🇵🇹</span><span>Português</span>
+          <svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 7l3.5 3.5 6.5-6.5"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="login-logo">🔥 Streakly</div>
+    <p class="login-tagline" id="login-tagline">Completa tus tareas. Mantén tu racha.</p>
+    <div class="login-card">
+      <h2 id="login-title">Bienvenido a Streakly</h2>
+      <p id="login-subtitle">Inicia sesión para comenzar</p>
+      <button class="btn-google" onclick="loginWithGoogle()">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        <span id="login-google-btn">Continuar con Google</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="screen" id="screen-main">
+    <div class="topbar">
+      <div class="topbar-logo">🔥 Streakly</div>
+      <div class="topbar-actions">
+        <button class="topbar-btn" id="admin-btn" onclick="showAdminPanel()" style="display:none" title="Admin">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </button>
+        <button class="topbar-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="theme-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="sub-dashboard" class="content" style="display:none"></div>
+    <div id="sub-tasks" style="display:none;flex-direction:column;flex:1;overflow:hidden"></div>
+    <div id="sub-heatmap" class="content" style="display:none"></div>
+    <div id="sub-profile" class="content-full" style="display:none;overflow-y:auto"></div>
+    <div id="sub-admin" class="content" style="display:none"></div>
+
+    <button class="fab" id="fab" onclick="openModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+
+    <nav class="bottom-nav" id="bottom-nav">
+      <button class="nav-item active" data-tab="dashboard" onclick="switchTab('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span id="nav-dashboard">Inicio</span>
+      </button>
+      <button class="nav-item" data-tab="tasks" onclick="switchTab('tasks')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        <span id="nav-tasks">Tareas</span>
+      </button>
+      <button class="nav-item" data-tab="heatmap" onclick="switchTab('heatmap')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span id="nav-heatmap">Rachas</span>
+      </button>
+      <button class="nav-item" data-tab="profile" onclick="switchTab('profile')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <span id="nav-profile">Perfil</span>
+      </button>
+    </nav>
+  </div>
+
+</div>
+
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import{getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import{getFirestore,collection,doc,addDoc,updateDoc,deleteDoc,getDocs,query,orderBy,onSnapshot,setDoc,getDoc,serverTimestamp}from'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+const firebaseConfig={apiKey:"AIzaSyA0D69-UeOtJD2rML1bxzWsOQPJbB_2m3g",authDomain:"streakly-c1324.firebaseapp.com",projectId:"streakly-c1324",storageBucket:"streakly-c1324.firebasestorage.app",messagingSenderId:"629706853224",appId:"1:629706853224:web:1ebf20c5e9cbf5e4b164dd"};
+const ADMIN_UID="REPLACE_WITH_YOUR_UID";
+
+const fbApp=initializeApp(firebaseConfig);
+const auth=getAuth(fbApp);
+const db=getFirestore(fbApp);
+const provider=new GoogleAuthProvider();
+
+let currentUser=null,tasks=[],selectedPriority='medium',currentFilter='all',currentSort='deadline',currentTab='dashboard',lang={},currentLang='es',unsubTasks=null,historyCache={};
+
+/* ── I18N ── */
+async function loadLang(code){
+  try{
+    const res=await fetch(`./lang/${code}.json`);
+    lang=await res.json();
+    currentLang=code;
+    applyI18n();
+    document.documentElement.lang=code;
+  }catch(e){console.warn('lang error',e)}
+}
+function t(k){return lang[k]||k}
+function applyI18n(){
+  // Login
+  setText('login-tagline','tagline');
+  setText('login-title','login_title');
+  setText('login-subtitle','login_subtitle');
+  setText('login-google-btn','login_google');
+  // Nav
+  setText('nav-dashboard','nav_dashboard');
+  setText('nav-tasks','nav_tasks');
+  setText('nav-heatmap','nav_heatmap');
+  setText('nav-profile','nav_profile');
+  // Modal
+  setText('lbl-name','task_name');
+  setText('lbl-deadline','task_deadline');
+  setText('lbl-priority','task_priority');
+  setText('lbl-notes','task_notes');
+  setText('btn-cancel','cancel');
+  setPlaceholder('task-name-input','task_name_placeholder');
+  setPlaceholder('task-notes-input','task_notes_placeholder');
+  // Priority
+  setText('p-high','task_priority_high');
+  setText('p-medium','task_priority_medium');
+  setText('p-low','task_priority_low');
+}
+function setText(id,key){const el=document.getElementById(id);if(el)el.textContent=t(key)}
+function setPlaceholder(id,key){const el=document.getElementById(id);if(el)el.placeholder=t(key)}
+window.setLang=async(code)=>{await loadLang(code);renderCurrentTab()};
+
+/* ── AUTH ── */
+window.loginWithGoogle=async()=>{try{await signInWithPopup(auth,provider)}catch(e){showToast('Error: '+e.message)}};
+window.logoutUser=async()=>{if(!confirm(t('profile_signout_confirm')))return;if(unsubTasks)unsubTasks();await signOut(auth)};
+
+onAuthStateChanged(auth,async(user)=>{
+  document.getElementById('loading-screen').style.display='none';
+  if(user){
+    currentUser=user;
+    await setDoc(doc(db,'users',user.uid),{displayName:user.displayName,email:user.email,photoURL:user.photoURL,lastActive:serverTimestamp()},{merge:true});
+    showScreen('main');
+    switchTab('dashboard');
+    subscribeToTasks();
+    document.getElementById('admin-btn').style.display=user.uid===ADMIN_UID?'flex':'none';
+  }else{
+    currentUser=null;tasks=[];
+    showScreen('login');
+  }
+});
+
+function showScreen(n){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));const el=document.getElementById('screen-'+n);if(el)el.classList.add('active')}
+
+/* ── FIRESTORE ── */
+function subscribeToTasks(){
+  if(unsubTasks)unsubTasks();
+  const q=query(collection(db,'users',currentUser.uid,'tasks'),orderBy('createdAt','desc'));
+  unsubTasks=onSnapshot(q,snap=>{
+    tasks=snap.docs.map(d=>({id:d.id,...d.data()}));
+    refreshHistory();
+    renderCurrentTab();
+  });
+}
+async function refreshHistory(){historyCache=await getHistory()}
+async function getHistory(){
+  const snap=await getDocs(collection(db,'users',currentUser.uid,'history'));
+  return snap.docs.reduce((a,d)=>{a[d.id]=d.data();return a},{});
+}
+async function addTask(data){await addDoc(collection(db,'users',currentUser.uid,'tasks'),{...data,completed:false,createdAt:serverTimestamp()})}
+async function updateTask(id,data){await updateDoc(doc(db,'users',currentUser.uid,'tasks',id),data)}
+async function deleteTask(id){await deleteDoc(doc(db,'users',currentUser.uid,'tasks',id))}
+
+window.toggleTask=async(id)=>{
+  const task=tasks.find(t=>t.id===id);if(!task)return;
+  await updateTask(id,{completed:!task.completed,completedAt:!task.completed?serverTimestamp():null});
+  const now=new Date().toISOString().split('T')[0];
+  await updateDailyHistory(now);
+};
+async function updateDailyHistory(dateStr){
+  const todayTasks=tasks.filter(t=>t.deadline&&t.deadline.startsWith(dateStr));
+  if(!todayTasks.length)return;
+  const completed=todayTasks.filter(t=>t.completed).length;
+  await setDoc(doc(db,'users',currentUser.uid,'history',dateStr),{total:todayTasks.length,completed,date:dateStr},{merge:true});
+}
+
+/* ── STREAK ── */
+function calcStreak(history){
+  let streak=0,best=0,cur=0,perfectDays=0;
+  Object.values(history).forEach(h=>{if(h.completed>=h.total&&h.total>0)perfectDays++});
+  const today=new Date();const d=new Date(today);
+  for(let i=0;i<365;i++){
+    const key=d.toISOString().split('T')[0];
+    const h=history[key];
+    if(h&&h.completed>=h.total&&h.total>0)streak++;
+    else if(i>0)break;
+    d.setDate(d.getDate()-1);
+  }
+  const sorted=Object.keys(history).sort();
+  for(let i=0;i<sorted.length;i++){
+    const h=history[sorted[i]];
+    if(h.completed>=h.total&&h.total>0){cur++;if(cur>best)best=cur}else cur=0;
+  }
+  return{streak,best,perfectDays};
+}
+
+/* ── NAV ── */
+window.switchTab=(tab)=>{
+  currentTab=tab;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.tab===tab));
+  ['dashboard','tasks','heatmap','profile','admin'].forEach(t=>{const el=document.getElementById('sub-'+t);if(el)el.style.display='none'});
+  const fab=document.getElementById('fab');
+  fab.style.display=(tab==='dashboard'||tab==='tasks')?'flex':'none';
+  renderCurrentTab();
+};
+function renderCurrentTab(){
+  switch(currentTab){
+    case'dashboard':renderDashboard();break;
+    case'tasks':renderTasks();break;
+    case'heatmap':renderHeatmap();break;
+    case'profile':renderProfile();break;
+    case'admin':renderAdmin();break;
+  }
+}
+
+/* ── DASHBOARD ── */
+function renderDashboard(){
+  const el=document.getElementById('sub-dashboard');el.style.display='block';
+  const hour=new Date().getHours();
+  const greeting=hour<12?t('dashboard_greeting_morning'):hour<18?t('dashboard_greeting_afternoon'):t('dashboard_greeting_evening');
+  const firstName=currentUser.displayName?.split(' ')[0]||'';
+  const today=new Date().toISOString().split('T')[0];
+  const todayTasks=tasks.filter(task=>task.deadline&&task.deadline.startsWith(today));
+  const completedToday=todayTasks.filter(t=>t.completed).length;
+  const{streak}=calcStreak(historyCache);
+  const localeMap={es:'es-ES',en:'en-US',de:'de-DE',pt:'pt-PT'};
+  const locale=localeMap[currentLang]||'es-ES';
+  el.innerHTML=`
+    <div class="greeting">
+      <div class="greeting-name">${greeting}, ${firstName} 👋</div>
+      <div class="greeting-sub">${new Date().toLocaleDateString(locale,{weekday:'long',day:'numeric',month:'long'})}</div>
+    </div>
+    <div class="streak-banner">
+      <div class="streak-icon">🔥</div>
+      <div>
+        <div class="streak-days">${streak} ${t('dashboard_days')}</div>
+        <div class="streak-label">${t('dashboard_streak')}</div>
+      </div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-value">${todayTasks.length}</div><div class="kpi-label">${t('dashboard_tasks_today')}</div></div>
+      <div class="kpi-card"><div class="kpi-value">${completedToday}</div><div class="kpi-label">${t('dashboard_completed')}</div></div>
+      <div class="kpi-card"><div class="kpi-value">${todayTasks.length-completedToday}</div><div class="kpi-label">${t('dashboard_pending')}</div></div>
+    </div>
+    <div class="section-header">
+      <div class="section-title">${t('dashboard_todays_tasks')}</div>
+      <span class="section-action" onclick="switchTab('tasks')">${t('task_filter_all')} →</span>
+    </div>
+    ${todayTasks.length===0
+      ?`<div class="empty-state"><div class="empty-state-icon">🎉</div><h3>${t('dashboard_no_tasks')}</h3><p>${t('dashboard_add_first')}</p></div>`
+      :todayTasks.map(task=>renderTaskCard(task)).join('')}
+  `;
+}
+
+/* ── TASKS ── */
+function renderTasks(){
+  const el=document.getElementById('sub-tasks');el.style.display='flex';
+  const filtered=getFilteredTasks();
+  el.innerHTML=`
+    <div class="filter-bar">
+      ${['all','pending','completed','overdue'].map(f=>`<button class="filter-pill ${currentFilter===f?'active':''}" onclick="setFilter('${f}')">${t('task_filter_'+f)}</button>`).join('')}
+    </div>
+    <div class="sort-bar">
+      <span class="sort-label">${t('task_sort_deadline')}:</span>
+      <select class="sort-select" onchange="setSort(this.value)">
+        <option value="deadline" ${currentSort==='deadline'?'selected':''}>${t('task_sort_deadline')}</option>
+        <option value="priority" ${currentSort==='priority'?'selected':''}>${t('task_sort_priority')}</option>
       </select>
     </div>
-    <div class="modal-buttons">
-      <button class="btn btn-cancel" onclick="closeModal('add-modal')" id="btn-cancel-lbl">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveHabit()" id="btn-save-lbl">Agregar</button>
+    <div class="content" style="flex:1;overflow-y:auto">
+      ${filtered.length===0
+        ?`<div class="empty-state"><div class="empty-state-icon">📋</div><h3>${t('task_empty')}</h3><p>${t('task_empty_sub')}</p></div>`
+        :filtered.map(task=>renderTaskCard(task)).join('')}
     </div>
-  </div>
-</div>
+  `;
+}
+function getFilteredTasks(){
+  const now=new Date();let f=[...tasks];
+  if(currentFilter==='pending')f=f.filter(t=>!t.completed);
+  if(currentFilter==='completed')f=f.filter(t=>t.completed);
+  if(currentFilter==='overdue')f=f.filter(t=>!t.completed&&t.deadline&&new Date(t.deadline)<now);
+  const pO={high:0,medium:1,low:2};
+  if(currentSort==='priority')f.sort((a,b)=>(pO[a.priority]||1)-(pO[b.priority]||1));
+  else f.sort((a,b)=>new Date(a.deadline||'9999')-new Date(b.deadline||'9999'));
+  return f;
+}
+window.setFilter=(f)=>{currentFilter=f;renderTasks()};
+window.setSort=(s)=>{currentSort=s;renderTasks()};
 
-<!-- MODAL CALENDARIO -->
-<div id="cal-modal" class="modal">
-  <div class="modal-content">
-    <h2 id="cal-habit-title">📅 Calendario</h2>
-    <div class="calendar-wrap">
-      <div class="calendar-header">
-        <button class="cal-nav" onclick="calNav(-1)">‹</button>
-        <span id="cal-month-label" style="font-weight:600;"></span>
-        <button class="cal-nav" onclick="calNav(1)">›</button>
+function renderTaskCard(task){
+  const now=new Date();
+  const dl=task.deadline?new Date(task.deadline):null;
+  const isOverdue=dl&&dl<now&&!task.completed;
+  const isToday=dl&&dl.toDateString()===now.toDateString();
+  const tom=new Date(now);tom.setDate(tom.getDate()+1);
+  const isTomorrow=dl&&dl.toDateString()===tom.toDateString();
+  let dateLabel='';
+  if(dl){
+    if(isToday)dateLabel=t('task_today');
+    else if(isTomorrow)dateLabel=t('task_tomorrow');
+    else dateLabel=dl.toLocaleDateString('es-ES',{day:'numeric',month:'short'});
+  }
+  return`<div class="task-card${task.completed?' completed':''}" onclick="openEditModal('${task.id}')">
+    <button class="task-check${task.completed?' done':''}" onclick="event.stopPropagation();toggleTask('${task.id}')">
+      <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 6l3 3 5-5"/></svg>
+    </button>
+    <div class="task-body">
+      <div class="task-title">${task.name||''}</div>
+      <div class="task-meta">
+        ${task.priority?`<span class="task-badge badge-${task.priority}">${t('task_priority_'+task.priority)}</span>`:''}
+        ${isOverdue?`<span class="task-badge badge-overdue">⚠ ${t('task_overdue')}</span>`:''}
+        ${dateLabel?`<span class="task-badge badge-date">📅 ${dateLabel}</span>`:''}
       </div>
-      <div class="calendar-grid" id="cal-grid"></div>
     </div>
-    <div style="margin-top:1rem;font-size:0.8rem;opacity:0.6;display:flex;gap:1.5rem;flex-wrap:wrap;">
-      <span>🟢 <span id="lbl-completed">Completado</span></span>
-      <span>🟣 <span id="lbl-today">Hoy</span></span>
-    </div>
-    <div class="modal-buttons" style="margin-top:1.2rem;">
-      <button class="btn btn-cancel" onclick="closeModal('cal-modal')" id="btn-close-cal">Cerrar</button>
-    </div>
-  </div>
-</div>
+    <button class="task-action-btn del" onclick="event.stopPropagation();confirmDelete('${task.id}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
+    </button>
+  </div>`;
+}
 
-<div id="toast"></div>
-<script src="app.js"></script>
+/* ── HEATMAP ── */
+function renderHeatmap(){
+  const el=document.getElementById('sub-heatmap');el.style.display='block';
+  const{streak,best,perfectDays}=calcStreak(historyCache);
+  const totalCompleted=tasks.filter(t=>t.completed).length;
+  const today=new Date();
+  const start=new Date(today);
+  start.setDate(start.getDate()-363);
+  start.setDate(start.getDate()-start.getDay());
+  let weeks=[];let d=new Date(start);
+  for(let w=0;w<53;w++){
+    let week=[];
+    for(let day=0;day<7;day++){
+      const key=d.toISOString().split('T')[0];
+      const h=historyCache[key];
+      let level=0;
+      if(h&&h.total>0){const pct=h.completed/h.total;if(pct>=1)level=4;else if(pct>=.75)level=3;else if(pct>=.5)level=2;else if(pct>0)level=1}
+      week.push({key,level,future:d>today});
+      d.setDate(d.getDate()+1);
+    }
+    weeks.push(week);
+  }
+  const months=lang.heatmap_months||['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const days=lang.heatmap_days_short||['S','M','T','W','T','F','S'];
+  el.innerHTML=`
+    <h2 class="section-title" style="margin-bottom:var(--space-2)">${t('heatmap_title')}</h2>
+    <p style="color:var(--txm);font-size:var(--text-xs);margin-bottom:var(--space-6)">${t('heatmap_subtitle')}</p>
+    <div class="heatmap-stats">
+      <div class="stat-card"><div class="stat-value">🔥 ${streak}</div><div class="stat-label">${t('heatmap_current_streak')}</div></div>
+      <div class="stat-card"><div class="stat-value">🏆 ${best}</div><div class="stat-label">${t('heatmap_best_streak')}</div></div>
+      <div class="stat-card"><div class="stat-value">⭐ ${perfectDays}</div><div class="stat-label">${t('heatmap_perfect_days')}</div></div>
+      <div class="stat-card"><div class="stat-value">✅ ${totalCompleted}</div><div class="stat-label">${t('heatmap_total_completed')}</div></div>
+    </div>
+    <div class="heatmap-grid-wrapper">
+      <div style="display:flex">
+        <div class="heatmap-days-labels">
+          ${days.map((d,i)=>`<div class="heatmap-day-label" style="opacity:${i%2===1?1:.25}">${d}</div>`).join('')}
+        </div>
+        <div class="heatmap-container">
+          ${weeks.map(week=>`<div class="heatmap-week">${week.map(cell=>`<div class="heatmap-cell${cell.future?'':' l'+cell.level}" style="${cell.future?'opacity:.1':''}" title="${cell.key}"></div>`).join('')}</div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="heatmap-legend">
+      <span>${t('heatmap_legend_none')}</span>
+      <div class="legend-cell" style="background:var(--s3)"></div>
+      <div class="legend-cell l1"></div><div class="legend-cell l2"></div><div class="legend-cell l3"></div><div class="legend-cell l4"></div>
+      <span>${t('heatmap_legend_full')}</span>
+    </div>
+  `;
+}
+
+/* ── PROFILE ── */
+function renderProfile(){
+  const el=document.getElementById('sub-profile');el.style.display='block';
+  const total=tasks.length,done=tasks.filter(t=>t.completed).length;
+  const rate=total>0?Math.round((done/total)*100):0;
+  const since=currentUser.metadata?.creationTime?new Date(currentUser.metadata.creationTime).toLocaleDateString(currentLang==='es'?'es-ES':'en-US',{month:'long',year:'numeric'}):'-';
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  const photo=currentUser.photoURL;
+  const{streak}=calcStreak(historyCache);
+  el.innerHTML=`
+    <div class="profile-header">
+      <div class="profile-avatar">${photo?`<img src="${photo}" alt="${currentUser.displayName}">`:'👤'}</div>
+      <div class="profile-name">${currentUser.displayName||''}</div>
+      <div class="profile-email">${currentUser.email||''}</div>
+    </div>
+    <div class="profile-stats">
+      <div class="profile-stat"><div class="profile-stat-value">🔥 ${streak}</div><div class="profile-stat-label">${t('dashboard_streak')}</div></div>
+      <div class="profile-stat"><div class="profile-stat-value">${done}/${total}</div><div class="profile-stat-label">${t('dashboard_completed')}</div></div>
+      <div class="profile-stat"><div class="profile-stat-value">${rate}%</div><div class="profile-stat-label">${t('profile_completion_rate')}</div></div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">${t('profile_member_since')} ${since}</div>
+      <div class="setting-row">
+        <span class="setting-label">${t('profile_language')}</span>
+        <select class="lang-select" onchange="setLang(this.value)">
+          <option value="es" ${currentLang==='es'?'selected':''}>🇪🇸 Español</option>
+          <option value="en" ${currentLang==='en'?'selected':''}>🇬🇧 English</option>
+          <option value="de" ${currentLang==='de'?'selected':''}>🇩🇪 Deutsch</option>
+          <option value="pt" ${currentLang==='pt'?'selected':''}>🇵🇹 Português</option>
+        </select>
+      </div>
+      <div class="setting-row">
+        <span class="setting-label">${t('profile_theme')}</span>
+        <label class="toggle-switch">
+          <input type="checkbox" ${!isDark?'checked':''} onchange="toggleTheme()">
+          <div class="toggle-slider"></div>
+        </label>
+      </div>
+    </div>
+    <button class="btn-danger" onclick="logoutUser()">${t('profile_signout')}</button>
+  `;
+}
+
+/* ── ADMIN ── */
+window.showAdminPanel=()=>{currentTab='admin';document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));['dashboard','tasks','heatmap','profile'].forEach(t=>{const el=document.getElementById('sub-'+t);if(el)el.style.display='none'});renderAdmin()};
+async function renderAdmin(){
+  const el=document.getElementById('sub-admin');el.style.display='block';
+  el.innerHTML=`<div style="text-align:center;padding:var(--space-8)"><div class="loading-spinner" style="margin:0 auto"></div></div>`;
+  try{
+    const usersSnap=await getDocs(collection(db,'users'));
+    let rows=[],totalT=0,totalC=0;
+    for(const uDoc of usersSnap.docs){
+      const u=uDoc.data();
+      const tSnap=await getDocs(collection(db,'users',uDoc.id,'tasks'));
+      const uTasks=tSnap.docs.map(d=>d.data());
+      const done=uTasks.filter(t=>t.completed).length;
+      totalT+=uTasks.length;totalC+=done;
+      rows.push({name:u.displayName,email:u.email,tasks:uTasks.length,done});
+    }
+    el.innerHTML=`
+      <div style="display:flex;align-items:center;margin-bottom:var(--space-6)">
+        <h2 class="section-title">${t('admin_title')}</h2>
+        <span class="admin-badge">👑 Admin</span>
+      </div>
+      <div class="admin-grid">
+        <div class="admin-card"><div class="admin-value">${usersSnap.size}</div><div class="admin-label">${t('admin_total_users')}</div></div>
+        <div class="admin-card"><div class="admin-value">${totalT}</div><div class="admin-label">${t('admin_tasks_created')}</div></div>
+        <div class="admin-card"><div class="admin-value">${totalC}</div><div class="admin-label">${t('admin_tasks_completed')}</div></div>
+        <div class="admin-card"><div class="admin-value">${totalT>0?Math.round((totalC/totalT)*100):0}%</div><div class="admin-label">${t('profile_completion_rate')}</div></div>
+      </div>
+      <div class="section-header">
+        <div class="section-title">${t('admin_users_list')}</div>
+        <span class="section-action" onclick='exportCSV(${JSON.stringify(rows)})'>${t('admin_export')} ↓</span>
+      </div>
+      <div class="users-table">
+        <div class="users-table-header"><span>Usuario</span><span>Tareas</span></div>
+        ${rows.map(r=>`<div class="user-row"><div><div class="user-name">${r.name||'—'}</div><div class="user-email">${r.email||''}</div></div><div class="user-tasks">${r.done}/${r.tasks}</div></div>`).join('')}
+      </div>
+    `;
+  }catch(e){el.innerHTML=`<div class="empty-state"><div class="empty-state-icon">⚠️</div><h3>Error</h3><p>${e.message}</p></div>`}
+}
+window.exportCSV=(rows)=>{
+  const csv='Nombre,Email,Tareas,Completadas\n'+rows.map(r=>`"${r.name}","${r.email}",${r.tasks},${r.done}`).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='streakly-users.csv';a.click();
+};
+
+/* ── MODAL ── */
+window.openModal=()=>{
+  document.getElementById('edit-task-id').value='';
+  document.getElementById('task-name-input').value='';
+  document.getElementById('task-deadline-input').value='';
+  document.getElementById('task-notes-input').value='';
+  document.getElementById('modal-title').textContent=t('task_add');
+  document.getElementById('modal-save-btn').textContent=t('task_create');
+  selectPriority('medium');
+  document.getElementById('task-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('task-name-input').focus(),300);
+};
+window.openEditModal=(id)=>{
+  const task=tasks.find(t=>t.id===id);if(!task)return;
+  document.getElementById('edit-task-id').value=id;
+  document.getElementById('task-name-input').value=task.name||'';
+  document.getElementById('task-deadline-input').value=task.deadline?task.deadline.slice(0,16):'';
+  document.getElementById('task-notes-input').value=task.notes||'';
+  document.getElementById('modal-title').textContent=t('task_edit');
+  document.getElementById('modal-save-btn').textContent=t('task_save');
+  selectPriority(task.priority||'medium');
+  document.getElementById('task-modal').classList.add('open');
+};
+window.closeModal=()=>document.getElementById('task-modal').classList.remove('open');
+window.saveTask=async()=>{
+  const name=document.getElementById('task-name-input').value.trim();
+  if(!name){showToast('⚠️ '+t('task_name_placeholder'));return}
+  const deadline=document.getElementById('task-deadline-input').value;
+  const notes=document.getElementById('task-notes-input').value.trim();
+  const editId=document.getElementById('edit-task-id').value;
+  try{
+    if(editId){await updateTask(editId,{name,deadline,notes,priority:selectedPriority});showToast(t('success_task_updated'))}
+    else{await addTask({name,deadline,notes,priority:selectedPriority});showToast(t('success_task_created'))}
+    closeModal();
+  }catch(e){showToast(t('error_generic'))}
+};
+window.selectPriority=(p)=>{
+  selectedPriority=p;
+  document.querySelectorAll('.priority-btn').forEach(btn=>btn.classList.toggle('selected',btn.dataset.p===p));
+};
+window.confirmDelete=async(id)=>{if(!confirm(t('task_delete_confirm')))return;await deleteTask(id);showToast(t('success_task_deleted'))};
+document.getElementById('task-modal').addEventListener('click',e=>{if(e.target===document.getElementById('task-modal'))closeModal()});
+
+/* ── THEME ── */
+window.toggleTheme=()=>{
+  const html=document.documentElement;
+  const isDark=html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme',isDark?'light':'dark');
+  const icon=document.getElementById('theme-icon');
+  icon.innerHTML=isDark?'<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>':'<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  if(currentTab==='profile')renderProfile();
+};
+
+/* ── TOAST ── */
+window.showToast=(msg)=>{
+  const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2800);
+};
+
+/* ── LANG PERSISTENCE ── */
+const LANG_KEY='streakly_lang';
+function savePreferredLang(code){try{window.__streaklyLang=code}catch(e){}}
+function getPreferredLang(){
+  if(window.__streaklyLang)return window.__streaklyLang;
+  const bl=navigator.language?.split('-')[0];
+  const supported=['es','en','de','pt'];
+  return supported.includes(bl)?bl:'es';
+}
+window.toggleLangDropdown=()=>{
+  const btn=document.getElementById('lang-globe-btn');
+  const dd=document.getElementById('lang-dropdown');
+  const open=dd.classList.toggle('open');
+  btn.classList.toggle('open',open);
+};
+// Close dropdown when clicking outside
+document.addEventListener('click',(e)=>{
+  const picker=document.getElementById('login-lang-picker');
+  if(picker&&!picker.contains(e.target)){
+    document.getElementById('lang-dropdown')?.classList.remove('open');
+    document.getElementById('lang-globe-btn')?.classList.remove('open');
+  }
+});
+window.switchLoginLang=async(code)=>{
+  savePreferredLang(code);
+  await loadLang(code);
+  // update active state
+  ['es','en','de','pt'].forEach(l=>{
+    const opt=document.getElementById('llb-'+l);
+    if(opt)opt.classList.toggle('active',l===code);
+  });
+  // close dropdown with micro-delay for feel
+  setTimeout(()=>{
+    document.getElementById('lang-dropdown')?.classList.remove('open');
+    document.getElementById('lang-globe-btn')?.classList.remove('open');
+  },120);
+  // sync profile lang select if visible
+  const sel=document.querySelector('.lang-select');
+  if(sel)sel.value=code;
+};
+// Override setLang to also save preference
+const _origSetLang=window.setLang;
+window.setLang=async(code)=>{savePreferredLang(code);await loadLang(code);renderCurrentTab();['es','en','de','pt'].forEach(l=>{const el=document.getElementById('llb-'+l);if(el)el.classList.toggle('active',l===code)});};
+
+/* ── INIT ── */
+const _initLang=getPreferredLang();
+loadLang(_initLang);
+// Mark active login lang button
+document.addEventListener('DOMContentLoaded',()=>{});
+setTimeout(()=>{['es','en','de','pt'].forEach(l=>{const el=document.getElementById('llb-'+l);if(el)el.classList.toggle('active',l===_initLang)})},50);
+</script>
 </body>
 </html>
